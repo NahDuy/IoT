@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="smart-home">
+    <div class="group-wrapper">
+      <div class="group">
+        <div class="div">
+          <div class="rectangle"></div>
+          <div class="div-wrapper">
+            <div class="div">
+              <div class="overlap">
+                <div class="overlap-wrapper">
+                  <div class="overlap-group">
+                    <div class="rectangle-2"></div>
+                    <div class="overlap-2">
+                      <header class="header">
+                        <div class="group-2">
+                          <div class="div-2">
+                            <div class="div-3">
+                              <div class="div-2">
+                                <div class="overlap-3">
+                                  <div class="overlap-group-wrapper">
+                                    <div class="overlap-4">
+                                      <div class="refridgerator">Temperature</div>
+                                      <div class="group-3"></div>
+                                      <div class="group-4">
+                                        <div class="group-5">
+                                          <div id="weather-icon">
+                                            <!-- Weather icon will be displayed here -->
+                                          </div>
+                                          <div class="group-6">
+                                            <div class="overlap-group-2">
+                                              <div class="text-wrapper">15</div>
+                                              <div class="text-wrapper-2">C</div>
+                                              <div class="oval"></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="group-7">
+                          <div class="div-2">
+                            <div class="div-3">
+                              <div class="overlap-5">
+                                <div class="overlap-group-wrapper">
+                                  <div class="overlap-4">
+                                    <div class="refridgerator">Light</div>
+                                    <div class="group-3"></div>
+                                    <div class="group-8">
+                                      <div class="group-9">
+                                        <div class="group-10">
+                                          <div class="overlap-group-2">
+                                            <div class="text-wrapper">15</div>
+                                            <div class="text-wrapper-2">C</div>
+                                            <div class="oval"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <img class="bolt-lightning" src="img/bolt-lightning-1-1.svg" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="group-11">
+                          <div class="div-2">
+                            <div class="div-3">
+                              <div class="overlap-6">
+                                <div class="overlap-group-wrapper">
+                                  <div class="overlap-group-3">
+                                    <div class="refridgerator">Humidity</div>
+                                    <div class="group-3"></div>
+                                    <div class="group-12">
+                                      <div class="group-13">
+                                        <div class="group-14">
+                                          <div class="text-wrapper-3">15</div>
+                                          <div class="c">%</div>
+                                        </div>
+                                        <img class="img" src="img/path-1.svg" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </header>
+                      <div class="chart">
+                        <canvas id="chart"></canvas>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="devices">
+                  <div class="devices-wrapper">
+                    <div class="devices-2">
+                      <div class="lamp">
+                        <div class="overlap-10">
+                          <img class="lightbulb" src="img/light-off.png" />
+                          <div class="group-19">
+                            <div class="overlap-group-5">
+                              <div class="oval-copy-2"></div>
+                            </div>
+                          </div>
+                          <div class="lights">Lamp</div>
+                        </div>
+                      </div>
+                      <div class="air">
+                        <div class="overlap-11">
+                          <div class="group-20">
+                            <div class="overlap-group-6">
+                              <div class="oval-copy-2"></div>
+                            </div>
+                          </div>
+                          <div class="temperature">Air Conditioner</div>
+                          <img class="air-conditioner" src="img/air-on.png" />
+                        </div>
+                      </div>
+                      <div class="fan">
+                        <div class="overlap-12">
+                          <div class="group-20">
+                            <div class="overlap-group-7">
+                              <div class="oval-copy-2"></div>
+                            </div>
+                          </div>
+                          <div class="overlap-13">
+                            <div class="temperature-2">Fan</div>
+                            <img class="fan-table" src="img/fan-off.png" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="nav">
+                
+                <div class="table1-wrapper"><a href="table1.html"><img class="table-icon" src="img/table.svg" /></a></div>
+              </div> -->
+              <div class="nav">
+                <div class="nav-buttons">
+                  <a href="index.html" onclick="saveState()" class="nav-button">
+                    <img class="icon" src="img/house.svg" />
+                    <span class="button-text">User</span>
+                  </a>
+                  <a href="user-info.html" onclick="saveState()" class="nav-button">
+                    <img class="icon" src="img/user-1.svg" />
+                    <span class="button-text">User</span>
+                  </a>
+                  <a href="action.html" onclick="saveState()" class="nav-button">
+                    <img class="icon" src="img/table.svg" />
+                    <span class="button-text">Action History</span>
+                  </a>
+                  <a href="data.html" onclick="saveState()" class="nav-button">
+                    <img class="icon" src="img/table.svg" />
+                    <span class="button-text">Datasensor</span>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="script.js"></script>
+</body>
+
+</html>

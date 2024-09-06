@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action History</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="stylesta.css">
+
+
+</head>
+
+<body>
+    <div class="nav">
+        <div class="nav-buttons">
+            <a href="index.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/house.svg" />
+                <span class="button-text">User</span>
+            </a>
+            <a href="user-info.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/user-1.svg" />
+                <span class="button-text">User</span>
+            </a>
+            <a href="action.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Action History</span>
+            </a>
+            <a href="data.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Datasensor</span>
+            </a>
+        </div>
+
+    </div>
+    <div class="statistical-container">
+        <h1>Action History</h1>
+
+        <!-- Filters -->
+        <div class="filters">
+            <label for="device-filter">Device:</label>
+            <select id="device-filter">
+                <option value="all">All</option>
+                <option value="Lamp">Lamp</option>
+                <option value="Air Conditioner">Air Conditioner</option>
+                <option value="Fan">Fan</option>
+            </select>
+
+            <label for="action-filter">Action:</label>
+            <select id="action-filter">
+                <option value="all">All</option>
+                <option value="On">On</option>
+                <option value="Off">Off</option>
+            </select>
+        </div>
+
+
+        <!-- Add time filter -->
+        <label for="time-filter">Tìm kiếm theo thời gian:</label>
+        <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 15:28:43 28/8/2024)">
+
+
+        <!-- Table -->
+        <table id="action-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Device</th>
+                    <th>Action</th>
+                    <th onclick="sortTableByTime()">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div id="pagination">
+            <button id="prev-page">Previous</button>
+            <span id="page-info"></span>
+            <button id="next-page">Next</button>
+            <label for="page-size">Page Size:</label>
+            <select id="page-size">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <!-- <button onclick="goHome()" class="home-button">Quay lại trang chủ</button> -->
+    </div>
+    <script>
+        function goHome() {
+            // Giả sử saveState() đã được gọi trong quá trình click các nút trên trang index
+            setTimeout(function () {
+                window.location.assign("index.html");
+            }, 100); // Trì hoãn 100ms để đảm bảo trạng thái được lưu
+        }
+    </script>
+
+    <script src="action.js"></script>
+</body>
+
+</html>

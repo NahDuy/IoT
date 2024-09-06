@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Data</title>
+    <link rel="stylesheet" href="stylesta.css">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="globals.css" />
+  
+</head>
+
+<body>
+    <div class="nav">
+        <!-- Navigation content here -->
+        <div class="nav-buttons">
+            <a href="index.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/house.svg" />
+                <span class="button-text">User</span>
+              </a>
+            <a href="user-info.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/user-1.svg" />
+                <span class="button-text">User</span>
+            </a>
+            <a href="action.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Action History</span>
+            </a>
+            <a href="data.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Datasensor</span>
+            </a>
+        </div>
+    </div>
+    <div class="statistical-container">
+        <h1>Datasensor</h1>
+
+        <!-- Filters -->
+        <div class="filters">
+
+            <select id="device-filter">
+                <option value="all">All</option>
+                <option value="Lamp">Temperature</option>
+                <option value="Air Conditioner">Humidity</option>
+                <option value="Fan">Light</option>
+            </select>
+            <label for="time-filter">Tìm kiếm theo thời gian:</label>
+            <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 15:28:43 28/8/2024)">
+
+
+        </div>
+
+        <!-- Table -->
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Temperature (°C)</th>
+                    <th>Humidity (%)</th>
+                    <th>Light (lx)</th>
+                    <th onclick="sortTableByTime()">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <!-- Pagination -->
+        <div id="pagination">
+            <button id="prev-page">Previous</button>
+            <span id="page-info"></span>
+            <button id="next-page">Next</button>
+            <label for="page-size">Page Size:</label>
+            <select id="page-size">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        
+    </div>
+
+    <script>
+        function goHome() {
+            setTimeout(function () {
+                window.location.assign("index.html");
+            }, 100); // Trì hoãn 100ms để đảm bảo trạng thái được lưu
+        }
+        
+    </script>
+
+    <script src="data.js"></script>
+
+</body>
+
+</html>

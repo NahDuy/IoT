@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thông Tin Người Dùng</title>
+  <link rel="stylesheet" href="styleuser.css">
+</head>
+
+<body>
+    <div class="nav">
+        <!-- Navigation content here -->
+        <div class="nav-buttons">
+            <a href="index.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/house.svg" />
+                <span class="button-text">User</span>
+              </a>
+            <a href="user-info.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/user-1.svg" />
+                <span class="button-text">User</span>
+            </a>
+            <a href="action.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Action History</span>
+            </a>
+            <a href="data.html" onclick="saveState()" class="nav-button">
+                <img class="icon" src="img/table.svg" />
+                <span class="button-text">Datasensor</span>
+            </a>
+        </div>
+    </div>
+  <div class="user-info">
+    <img src="./img/z5288355148201_48f4a14ebd904746db54fd63ac91a631.jpg" alt="User Image" class="user-image">
+    <h1>Tên: Nguyễn Anh Duy</h1>
+    <p>Lớp: D21CNPM5
+    </p>
+    <p>MSV: B21DCCN298</p>
+    
+  </div>
+
+  <script>
+    function goHome() {
+        // Giả sử saveState() đã được gọi trong quá trình click các nút trên trang index
+        setTimeout(function () {
+            window.location.assign("index.html");
+        }, 100); // Trì hoãn 100ms để đảm bảo trạng thái được lưu
+    }
+</script>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
+<!-- 
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Người Dùng</title>
+    <link rel="stylesheet" href="styleuser.css">
+</head>
+
+<body>
+    <div class="user-info">
+        <img src="./img/z5288355148201_48f4a14ebd904746db54fd63ac91a631.jpg" alt="User Image" class="user-image">
+        <h1>Tên: Nguyễn Anh Duy</h1>
+        <p>Lớp: D21CNPM5</p>
+        <p>MSV: B21DCCN298</p>
+        <button onclick="goHome()" class="home-button">Quay lại trang chủ</button>
+    </div>
+
+    <div>
+        <h2>Nhập dữ liệu mới:</h2>
+        <form id="userForm">
+            <label for="dataInput">Dữ liệu:</label>
+            <input type="text" id="dataInput" name="data">
+            <button type="submit">Gửi</button>
+        </form>
+    </div>
+
+    <div id="dataDisplay">
+        <h2>Dữ liệu nhận được từ server:</h2>
+        <ul id="dataList"></ul>
+    </div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const dataInput = document.getElementById('dataInput').value;
+
+            fetch('/api/actions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: dataInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Update the list with the new data
+                    const dataList = document.getElementById('dataList');
+                    const newItem = document.createElement('li');
+                    newItem.textContent = data.data;
+                    dataList.appendChild(newItem);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Fetch and display all data from the server on load
+        window.onload = function () {
+            fetch('/api/actions')
+                .then(response => response.json())
+                .then(data => {
+                    const dataList = document.getElementById('dataList');
+                    data.forEach(item => {
+                        const newItem = document.createElement('li');
+                        newItem.textContent = item.data;
+                        dataList.appendChild(newItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        };
+
+        function goHome() {
+            setTimeout(function () {
+                window.location.assign("index.html");
+            }, 100);
+        }
+    </script>
+
+</body>
+
+</html> -->
