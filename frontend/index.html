@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="globals.css" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 
 <body>
@@ -29,29 +30,12 @@
                         <div class="group-2">
                           <div class="div-2">
                             <div class="div-3">
-                              <div class="div-2">
-                                <div class="overlap-3">
-                                  <div class="overlap-group-wrapper">
-                                    <div class="overlap-4">
-                                      <div class="refridgerator">Temperature</div>
-                                      <div class="group-3"></div>
-                                      <div class="group-4">
-                                        <div class="group-5">
-                                          <div id="weather-icon">
-                                            <!-- Weather icon will be displayed here -->
-                                          </div>
-                                          <div class="group-6">
-                                            <div class="overlap-group-2">
-                                              <div class="text-wrapper">15</div>
-                                              <div class="text-wrapper-2">C</div>
-                                              <div class="oval"></div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
+                              <div class="temperature">
+                                <div class="info-row">
+                                  <span class="info-label">Temperature: </span>
+                                  <span id="temperature_text">-- °C</span>
                                 </div>
+                                <div class="temperature-bar"></div> <!-- Thanh nhiệt độ bên dưới -->
                               </div>
                             </div>
                           </div>
@@ -59,25 +43,12 @@
                         <div class="group-7">
                           <div class="div-2">
                             <div class="div-3">
-                              <div class="overlap-5">
-                                <div class="overlap-group-wrapper">
-                                  <div class="overlap-4">
-                                    <div class="refridgerator">Light</div>
-                                    <div class="group-3"></div>
-                                    <div class="group-8">
-                                      <div class="group-9">
-                                        <div class="group-10">
-                                          <div class="overlap-group-2">
-                                            <div class="text-wrapper">15</div>
-                                            <div class="text-wrapper-2">C</div>
-                                            <div class="oval"></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <img class="bolt-lightning" src="img/bolt-lightning-1-1.svg" />
-                                  </div>
+                              <div class="humidity">
+                                <div class="info-row">
+                                  <span class="info-label">Humidity: </span>
+                                  <span id="humidity_text">-- %</span>
                                 </div>
+                                <div class="humidity-bar"></div> <!-- Thanh độ ẩm bên dưới -->
                               </div>
                             </div>
                           </div>
@@ -85,27 +56,19 @@
                         <div class="group-11">
                           <div class="div-2">
                             <div class="div-3">
-                              <div class="overlap-6">
-                                <div class="overlap-group-wrapper">
-                                  <div class="overlap-group-3">
-                                    <div class="refridgerator">Humidity</div>
-                                    <div class="group-3"></div>
-                                    <div class="group-12">
-                                      <div class="group-13">
-                                        <div class="group-14">
-                                          <div class="text-wrapper-3">15</div>
-                                          <div class="c">%</div>
-                                        </div>
-                                        <img class="img" src="img/path-1.svg" />
-                                      </div>
-                                    </div>
-                                  </div>
+                              <div class="light">
+                                <div class="info-row">
+                                  <span class="info-label">Light: </span>
+                                  <span id="light_text">--</span>
                                 </div>
+                                <div class="light-bar"></div> <!-- Thanh ánh sáng bên dưới -->
                               </div>
                             </div>
                           </div>
                         </div>
                       </header>
+
+
                       <div class="chart">
                         <canvas id="chart"></canvas>
                       </div>
@@ -185,6 +148,102 @@
         </div>
       </div>
       <script src="script.js"></script>
+      <script>
+
+        // Kết nối với MQTT Broker  
+        const client = mqtt.connect('ws://192.168.12.119:8080');
+
+        client.on('connect', function () {
+          console.log('Đã kết nối với MQTT broker');
+
+          // Đăng ký lắng nghe topic 'esp32/sensors' và 'esp32/leds' để nhận dữ liệu cảm biến và phản hồi từ đèn LED
+          client.subscribe('esp32/sensors');
+          client.subscribe('esp32/leds');
+        });
+
+        // Lắng nghe phản hồi từ MQTT broker
+        // Lắng nghe phản hồi từ MQTT broker
+        client.on('message', function (topic, message) {
+          if (topic === 'esp32/sensors') {
+            const sensorData = JSON.parse(message.toString());
+
+            // Cập nhật giá trị nhiệt độ, độ ẩm và ánh sáng
+            const temperature = sensorData.temperature;
+            const humidity = sensorData.humidity;
+            const light = sensorData.light;
+
+            document.getElementById('temperature_text').innerText = `${temperature} °C`;
+            document.getElementById('humidity_text').innerText = `${humidity} %`;
+            document.getElementById('light_text').innerText = light;
+
+            // Tính toán tỷ lệ để thay đổi chiều rộng của thẻ
+            const tempPercentage = Math.min(temperature / 50 * 100, 100);  // Giả định max là 50°C
+            const humidityPercentage = Math.min(humidity, 100);  // Độ ẩm tối đa là 100%
+            const lightPercentage = Math.min(light / 1000 * 100, 100);  // Giả định max ánh sáng là 1000
+
+            // Cập nhật chiều rộng của các thẻ dựa trên tỷ lệ
+            document.querySelector('.temperature-bar').style.width = `${tempPercentage}%`;
+            document.querySelector('.humidity-bar').style.width = `${humidityPercentage}%`;
+            document.querySelector('.light-bar').style.width = `${lightPercentage}%`;
+
+          }
+          if (topic === 'esp32/leds') {
+            const ledStatus = JSON.parse(message.toString());
+
+            // Cập nhật trạng thái của các nút và thay đổi ảnh dựa trên phản hồi từ ESP32
+            if (ledStatus.led2 === "ON") {
+              document.querySelector('.air .group-20').classList.add('active');
+              airbuibImage.src = 'img/air-off.png';  // Cập nhật ảnh máy lạnh
+            } else {
+              document.querySelector('.air .group-20').classList.remove('active');
+              airbuibImage.src = 'img/air-on.png';  // Cập nhật ảnh máy lạnh
+            }
+
+            if (ledStatus.led3 === "ON") {
+              document.querySelector('.fan .group-20').classList.add('active');
+              fanbuibImage.src = 'img/fan-animate.gif';  // Cập nhật ảnh quạt
+            } else {
+              document.querySelector('.fan .group-20').classList.remove('active');
+              fanbuibImage.src = 'img/fan-off.png';  // Cập nhật ảnh quạt
+            }
+
+            if (ledStatus.led1 === "ON") {
+              document.querySelector('.lamp .group-19').classList.add('active');
+              lightbulbImage.src = 'img/light-on.png';  // Cập nhật ảnh đèn
+            } else {
+              document.querySelector('.lamp .group-19').classList.remove('active');
+              lightbulbImage.src = 'img/light-off.png';  // Cập nhật ảnh đèn
+            }
+          }
+        });
+
+
+        // Xử lý sự kiện khi nhấn nút điều khiển LED 1 (đèn)
+        document.querySelector('.lamp .group-19').addEventListener('click', function () {
+          const isActive = this.classList.contains('active');
+          const ledState = isActive ? 'OFF' : 'ON';
+          client.publish('esp32/ledControl', JSON.stringify({ led1: ledState }));
+          console.log(`Gửi lệnh điều khiển đèn 1: ${ledState}, chờ phản hồi từ ESP32...`);
+        });
+
+        // Xử lý sự kiện khi nhấn nút điều khiển LED 2 (quạt)
+        document.querySelector('.air .group-20').addEventListener('click', function () {
+          const isActive = this.classList.contains('active');
+          const ledState = isActive ? 'OFF' : 'ON';
+          client.publish('esp32/ledControl', JSON.stringify({ led2: ledState }));
+          console.log(`Gửi lệnh điều khiển quạt: ${ledState}, chờ phản hồi từ ESP32...`);
+        });
+
+        // Xử lý sự kiện khi nhấn nút điều khiển LED 3 (máy lạnh)
+        document.querySelector('.fan .group-20').addEventListener('click', function () {
+          const isActive = this.classList.contains('active');
+          const ledState = isActive ? 'OFF' : 'ON';
+          client.publish('esp32/ledControl', JSON.stringify({ led3: ledState }));
+          console.log(`Gửi lệnh điều khiển máy lạnh: ${ledState}, chờ phản hồi từ ESP32...`);
+        });
+
+
+      </script>
 </body>
 
 </html>

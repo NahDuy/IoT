@@ -201,7 +201,7 @@
 
   .smart-home .overlap-group-2 {
     position: relative;
-    width: 60px;
+    width: 77px;
     height: 18px;
     top: 6px;
     left: 1px;
@@ -862,7 +862,7 @@
   .smart-home .temperature {
     position: absolute;
     width: 239px;
-    top: 14px;
+    /* top: 14px; */
     left: 19px;
     font-family: "Mulish", Helvetica;
     font-weight: 700;
@@ -1166,4 +1166,40 @@
 .smart-home .nav-button .button-text {
   font-size: 12px;
   text-align: center;
+}
+/* Căn chỉnh dòng hiển thị tên và số liệu */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: black; /* Đổi màu chữ thành đen */
+  margin-bottom: 5px; /* Tạo khoảng cách nhỏ phía dưới tên và số liệu */
+}
+
+.info-label {
+  color: black; /* Đổi màu chữ thành đen */
+}
+
+/* Thiết lập thanh đo nhiệt độ, độ ẩm, và ánh sáng */
+.temperature-bar {
+  height: 20px;
+  background-color: #FF5733; /* Màu của thanh nhiệt độ */
+  width: 0%;
+  transition: width 0.5s;
+}
+
+.humidity-bar {
+  height: 20px;
+  background-color: #3498DB; /* Màu của thanh độ ẩm */
+  width: 0%;
+  transition: width 0.5s;
+}
+
+.light-bar {
+  height: 20px;
+  background-color: #F1C40F; /* Màu của thanh ánh sáng */
+  width: 0%;
+  transition: width 0.5s;
 }

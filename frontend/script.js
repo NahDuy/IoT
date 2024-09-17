@@ -78,39 +78,39 @@ function logAction(device, action) {
 }
 
 // Đảm bảo tất cả các phần tử DOM đã sẵn sàng trước khi thực hiện thao tác
-document.addEventListener('DOMContentLoaded', function () {
-    restoreState(); // Khôi phục trạng thái khi trang tải lại
+// document.addEventListener('DOMContentLoaded', function () {
+//     restoreState(); // Khôi phục trạng thái khi trang tải lại
 
-    // Thêm sự kiện click cho các nút và lưu trạng thái
-    if (airToggleButton) {
-        airToggleButton.addEventListener('click', function () {
-            const isAirOn = airToggleButton.classList.toggle('active');
-            saveState();
-            logAction('Air Conditioner', isAirOn ? 'On' : 'Off');
-            airbuibImage.src = isAirOn ? 'img/air-off.png' : 'img/air-on.png';
-        });
-    }
+//     // Thêm sự kiện click cho các nút và lưu trạng thái
+//     if (airToggleButton) {
+//         airToggleButton.addEventListener('click', function () {
+//             const isAirOn = airToggleButton.classList.toggle('active');
+//             saveState();
+//             logAction('Air Conditioner', isAirOn ? 'On' : 'Off');
+//             airbuibImage.src = isAirOn ? 'img/air-off.png' : 'img/air-on.png';
+//         });
+//     }
 
-    if (fanToggleButton) {
-        fanToggleButton.addEventListener('click', function () {
-            const isFanOn = fanToggleButton.classList.toggle('active');
-            saveState();
-            logAction('Fan', isFanOn ? 'On' : 'Off');
-            fanbuibImage.src = isFanOn ? 'img/fan-animate.gif' : 'img/fan-off.png';
-        });
-    }
+//     if (fanToggleButton) {
+//         fanToggleButton.addEventListener('click', function () {
+//             const isFanOn = fanToggleButton.classList.toggle('active');
+//             saveState();
+//             logAction('Fan', isFanOn ? 'On' : 'Off');
+//             fanbuibImage.src = isFanOn ? 'img/fan-animate.gif' : 'img/fan-off.png';
+//         });
+//     }
 
-    if (lampToggleButton) {
-        lampToggleButton.addEventListener('click', function () {
-            const isLampOn = lampToggleButton.classList.toggle('active');
-            saveState();
-            logAction('Lamp', isLampOn ? 'On' : 'Off');
-            // Đổi hình ảnh đèn khi bật/tắt
-            lightbulbImage.src = isLampOn ? 'img/light-on.png' : 'img/light-off.png';
+//     if (lampToggleButton) {
+//         lampToggleButton.addEventListener('click', function () {
+//             const isLampOn = lampToggleButton.classList.toggle('active');
+//             saveState();
+//             logAction('Lamp', isLampOn ? 'On' : 'Off');
+//             // Đổi hình ảnh đèn khi bật/tắt
+//             lightbulbImage.src = isLampOn ? 'img/light-on.png' : 'img/light-off.png';
 
-        });
-    }
-});
+//         });
+//     }
+// });
 
 // Lấy và hiển thị thông tin thời tiết
 function fetchWeather() {
@@ -192,3 +192,5 @@ document.querySelector('.user-name').textContent = 'Jane Smith';
 document.querySelector('.user-class').textContent = 'Class: 12B';
 document.querySelector('.user-id').textContent = 'MSV: 87654321';
 document.querySelector('.user-image').src = 'path/to/new-profile-image.jpg';
+
+
