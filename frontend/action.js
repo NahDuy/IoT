@@ -14,6 +14,8 @@ function fetchActions() {
     });
 }
 
+fetchActions();
+
 function updateTable(data) {
     const tableBody = document.querySelector('#action-table tbody');
     tableBody.innerHTML = '';
@@ -85,7 +87,5 @@ document.getElementById('page-size').addEventListener('change', changePageSize);
 document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
 
-// Initial data fetch
-fetchActions();
 
 

@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script> <!-- Hoặc chartjs-adapter-moment -->
 </head>
 
 <body>
@@ -72,6 +73,7 @@
                       <div class="chart">
                         <canvas id="chart"></canvas>
                       </div>
+
 
                     </div>
                   </div>
@@ -151,7 +153,10 @@
       <script>
 
         // Kết nối với MQTT Broker  
-        const client = mqtt.connect('ws://192.168.12.119:8080');
+        const ip = '192.168.1.16'; // Địa chỉ IP của MQTT broker
+        const mqttUrl = `ws://${ip}:8080`;
+        const client = mqtt.connect(mqttUrl); // Kết nối MQTT
+
 
         client.on('connect', function () {
           console.log('Đã kết nối với MQTT broker');
@@ -214,6 +219,7 @@
               document.querySelector('.lamp .group-19').classList.remove('active');
               lightbulbImage.src = 'img/light-off.png';  // Cập nhật ảnh đèn
             }
+
           }
         });
 
@@ -221,6 +227,7 @@
         // Xử lý sự kiện khi nhấn nút điều khiển LED 1 (đèn)
         document.querySelector('.lamp .group-19').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
+          logAction('Lamp', isActive ? 'On' : 'Off');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led1: ledState }));
           console.log(`Gửi lệnh điều khiển đèn 1: ${ledState}, chờ phản hồi từ ESP32...`);
@@ -229,6 +236,7 @@
         // Xử lý sự kiện khi nhấn nút điều khiển LED 2 (quạt)
         document.querySelector('.air .group-20').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
+          logAction('Fan', isActive ? 'On' : 'Off');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led2: ledState }));
           console.log(`Gửi lệnh điều khiển quạt: ${ledState}, chờ phản hồi từ ESP32...`);
@@ -237,10 +245,162 @@
         // Xử lý sự kiện khi nhấn nút điều khiển LED 3 (máy lạnh)
         document.querySelector('.fan .group-20').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
+          logAction('Air Conditioner', isActive ? 'On' : 'Off');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led3: ledState }));
           console.log(`Gửi lệnh điều khiển máy lạnh: ${ledState}, chờ phản hồi từ ESP32...`);
         });
+        document.addEventListener('DOMContentLoaded', function () {
+
+          const ctx = document.getElementById('chart').getContext('2d');
+          const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: [], // Nhãn thời gian
+              datasets: [
+                {
+                  label: 'Temperature (°C)',
+                  data: [],
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 2,
+                  fill: false
+                },
+                {
+                  label: 'Humidity (%)',
+                  data: [],
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 2,
+                  fill: false
+                },
+                {
+                  label: 'Light (lx)',
+                  data: [],
+                  borderColor: 'rgba(255, 206, 86, 1)',
+                  borderWidth: 2,
+                  fill: false
+                }
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  type: 'time', // Hiển thị thời gian trên trục X
+                  time: {
+                    unit: 'second'
+                  }
+                },
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+
+          // Cập nhật biểu đồ với dữ liệu mới
+          function updateChart(temperature, humidity, light) {
+            const now = new Date(); // Lấy thời gian hiện tại
+
+            // Thêm nhãn thời gian
+            chart.data.labels.push(now);
+
+            // Thêm dữ liệu vào các dataset
+            chart.data.datasets[0].data.push(temperature); // Nhiệt độ
+            chart.data.datasets[1].data.push(humidity);    // Độ ẩm
+            chart.data.datasets[2].data.push(light);       // Ánh sáng
+
+            // Giữ lại tối đa 20 điểm dữ liệu để không làm biểu đồ quá tải
+            if (chart.data.labels.length > 20) {
+              chart.data.labels.shift(); // Xóa nhãn cũ nhất
+              chart.data.datasets.forEach(dataset => dataset.data.shift()); // Xóa dữ liệu cũ nhất
+            }
+
+            chart.update(); // Cập nhật lại biểu đồ
+          }
+          let isTempAlerted = false;
+          let isHumidityAlerted = false;
+          let isLightAlerted = false;
+          // Kết nối với MQTT Broker
+          const client = mqtt.connect(mqttUrl);
+
+          client.on('connect', function () {
+            console.log('Đã kết nối với MQTT broker');
+            client.subscribe('esp32/sensors'); // Lắng nghe topic sensor data
+          });
+
+          // Nhận dữ liệu từ MQTT
+          client.on('message', function (topic, message) {
+            if (topic === 'esp32/sensors') {
+              const sensorData = JSON.parse(message.toString());
+              const temperature = sensorData.temperature;
+              const humidity = sensorData.humidity;
+              const light = sensorData.light;
+
+              // Cập nhật dữ liệu cảm biến lên biểu đồ
+              updateChart(temperature, humidity, light);
+
+              // Cập nhật trực quan giá trị lên UI
+              document.getElementById('temperature_text').innerText = `${temperature} °C`;
+              document.getElementById('humidity_text').innerText = `${humidity} %`;
+              document.getElementById('light_text').innerText = light;
+              // Kiểm tra điều kiện để bật quạt khi nhiệt độ > 40°C
+              if (temperature > 40 && !isTempAlerted) {
+                alert("Cảnh báo: Nhiệt độ vượt quá 40°C, quạt sẽ được bật!");
+                isTempAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
+                // Bật quạt tự động nếu chưa bật
+                const isFanActive = document.querySelector('.fan .group-20').classList.contains('active');
+                if (!isFanActive) {
+                  document.querySelector('.fan .group-20').classList.add('active');
+                  fanbuibImage.src = 'img/fan-animate.gif'; // Cập nhật ảnh quạt
+                  client.publish('esp32/ledControl', JSON.stringify({ led3: 'ON' })); // Bật quạt
+                  logAction('Fan', 'On');
+                }
+              }
+              if (temperature <= 40) {
+                isTempAlerted = false; // Đặt lại cờ khi nhiệt độ giảm xuống dưới ngưỡng
+              }
+
+              // Kiểm tra điều kiện để bật điều hòa khi độ ẩm > 70%
+              if (humidity > 70 && !isHumidityAlerted) {
+                alert("Cảnh báo: Độ ẩm vượt quá 70%, điều hòa sẽ được bật!");
+                isHumidityAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
+
+                // Bật điều hòa tự động nếu chưa bật
+                const isAirActive = document.querySelector('.air .group-20').classList.contains('active');
+                if (!isAirActive) {
+                  document.querySelector('.air .group-20').classList.add('active');
+                  airbuibImage.src = 'img/air-off.png'; // Cập nhật ảnh điều hòa
+                  client.publish('esp32/ledControl', JSON.stringify({ led2: 'ON' })); // Bật điều hòa
+                  logAction('Air Conditioner', 'On');
+                }
+              }
+              if (humidity <= 70) {
+                isHumidityAlerted = false; // Đặt lại cờ khi độ ẩm giảm xuống dưới ngưỡng
+              }
+
+              // Kiểm tra điều kiện để bật đèn khi ánh sáng quá thấp (dưới 300 lux)
+              if (light < 300 && !isLightAlerted) {
+                alert("Cảnh báo: Ánh sáng quá thấp, đèn sẽ được bật!");
+                isLightAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
+
+                // Bật đèn tự động nếu chưa bật
+                const isLampActive = document.querySelector('.lamp .group-19').classList.contains('active');
+                if (!isLampActive) {
+                  document.querySelector('.lamp .group-19').classList.add('active');
+                  lightbulbImage.src = 'img/light-on.png'; // Cập nhật ảnh đèn
+                  client.publish('esp32/ledControl', JSON.stringify({ led1: 'ON' })); // Bật đèn
+                  logAction('Lamp', 'On');
+                }
+              }
+
+              // Đặt lại cờ cảnh báo khi ánh sáng trở lại bình thường (trên 300 lux)
+              if (light >= 300) {
+                isLightAlerted = false; // Đặt lại cờ khi ánh sáng trở lại trên ngưỡng
+              }
+            }
+          });
+        });
+
+
 
 
       </script>

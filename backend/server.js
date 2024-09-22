@@ -2,70 +2,102 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mysql = require('mysql2');
+const mqtt = require('mqtt'); // Sử dụng thư viện MQTT
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+// Kết nối với MQTT Broker  
+const ip = '192.168.1.16'; // Địa chỉ IP của MQTT broker
+const mqttUrl = `ws://${ip}:8080`;
+
 
 let actions = [];
 
-// Phục vụ các file tĩnh từ thư mục frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// API Endpoints
-app.get('/api/actions', (req, res) => {
-    res.json(actions);
+const db = mysql.createConnection({
+    host: '127.0.0.1',
+    port: 3306,  // Chỉ định cổng ở đây
+    user: 'root',
+    password: 'root',
+    database: 'mqtt_sql'
 });
 
-app.post('/api/actions', (req, res) => {
-    const action = req.body;
-    actions.push(action);
-    res.status(201).json(action);
-});
-
-// // Chuyển hướng đến trang index.html khi truy cập vào đường dẫn gốc
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../frontend/index.html'));
-// });
-
-let isServerRestarted = true;
-
-app.get('/server-restart', (req, res) => {
-    if (isServerRestarted) {
-        isServerRestarted = false;
-        res.json({ restart: true });
+db.connect(err => {
+    if (err) {
+        console.error('Lỗi kết nối MySQL:', err);
     } else {
-        res.json({ restart: false });
+        console.log('Đã kết nối MySQL');
+    }
+});
+// API để nhận và lưu action
+app.post('/api/actions', (req, res) => {
+    const { device, action } = req.body;
+    const query = 'INSERT INTO actions (device, action) VALUES (?, ?)';
+    db.query(query, [device, action], (err, result) => {
+        if (err) {
+            console.error('Lỗi khi chèn vào database:', err);
+            res.status(500).send('Lỗi server');
+        } else {
+            res.status(201).json({ id: result.insertId, device, action, time: new Date() });
+        }
+    });
+});
+
+// API để lấy tất cả action
+app.get('/api/actions', (req, res) => {
+    const query = 'SELECT * FROM actions ORDER BY time DESC';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Lỗi khi truy vấn database:', err);
+            res.status(500).send('Lỗi server');
+        } else {
+            res.json(results);
+        }
+    });
+});
+// Kết nối với MQTT broker
+
+
+const mqttClient = mqtt.connect(mqttUrl); // Kết nối MQTT
+mqttClient.on('connect', () => {
+    console.log('Đã kết nối với MQTT broker');
+    mqttClient.subscribe('esp32/sensors'); // Lắng nghe topic sensor data
+});
+
+// Nhận dữ liệu từ MQTT và lưu vào MySQL
+mqttClient.on('message', (topic, message) => {
+    if (topic === 'esp32/sensors') {
+        const sensorData = JSON.parse(message.toString());
+        const { temperature, humidity, light } = sensorData;
+
+        // Lưu dữ liệu vào MySQL, đổi tên bảng thành sensors
+        const query = 'INSERT INTO sensors (temperature, humidity, light) VALUES (?, ?, ?)';
+        db.query(query, [temperature, humidity, light], (err, result) => {
+            if (err) {
+                console.error('Lỗi khi chèn vào database:', err);
+            } else {
+                console.log('Dữ liệu cảm biến đã được lưu vào MySQL');
+            }
+        });
     }
 });
 
-let buttonState = {};
-
-app.post('/save-state', (req, res) => {
-    buttonState = req.body;
-    res.sendStatus(200);
+// API để lấy dữ liệu cảm biến
+app.get('/api/sensor-data', (req, res) => {
+    const query = 'SELECT * FROM sensors ORDER BY time DESC';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Lỗi khi truy vấn database:', err);
+            res.status(500).send('Lỗi server');
+        } else {
+            res.json(results);
+        }
+    });
 });
+// Phục vụ các file tĩnh từ thư mục frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
 
-app.get('/get-state', (req, res) => {
-    res.json(buttonState);
-});
-
-
-let actions1 = [
-    {
-        id: 1,
-        temperature: 25,
-        humidity: 60,
-        light: 400,
-        time: '2024-08-26T12:34:56Z'
-    },
-    // thêm dữ liệu khác vào đây
-];
-
-// API Endpoints
-app.get('/api/actions', (req, res) => {
-    res.json(actions);
-});
 
 
 
@@ -73,34 +105,3 @@ const port = 3000;
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-// const express = require('express');
-// const path = require('path');
-// const bodyParser = require('body-parser');
-// const cors = require('cors');
-
-// const app = express();
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// let actions = [];
-
-// // Serve static files from the 'frontend' directory
-// app.use(express.static(path.join(__dirname, '../frontend')));
-
-// // API endpoint to handle POST requests and save actions
-// app.post('/api/actions', (req, res) => {
-//     const action = req.body;
-//     actions.push(action);
-//     res.status(201).json(action);
-// });
-
-// // API endpoint to get all actions
-// app.get('/api/actions', (req, res) => {
-//     res.json(actions);
-// });
-
-// const port = 3000;
-// app.listen(port, () => {
-//     console.log(`Server is running on http://localhost:${port}`);
-// });

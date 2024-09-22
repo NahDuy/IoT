@@ -112,67 +112,9 @@ function logAction(device, action) {
 //     }
 // });
 
-// Lấy và hiển thị thông tin thời tiết
-function fetchWeather() {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=Hanoi,vn&APPID=3d83934e6e30d07e089871d45e9ce784`;
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const iconCode = data.weather[0].icon;
-            const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
-            document.getElementById('weather-icon').innerHTML = `
-            <img src="${iconUrl}" alt="Weather Icon">
-        `;
-        })
-        .catch(error => console.log(error));
-}
 
-// Gọi hàm lấy thời tiết khi trang tải
-fetchWeather();
-
-// Cập nhật thời tiết mỗi 60 giây
-setInterval(fetchWeather, 60000);
-
-// Biểu đồ Chart.js - sử dụng dữ liệu giả lập
-function generateFakeData() {
-    return {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'],
-        values: Array.from({ length: 8 }, () => Math.floor(Math.random() * 100))
-    };
-}
-
-const ctx = document.getElementById('chart').getContext('2d');
-const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: [],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Dataset 2',
-                data: [],
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1
-            }
-        ]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
 
 function updateChart(data) {
     chart.data.labels = data.labels;
@@ -180,12 +122,6 @@ function updateChart(data) {
     chart.update();
 }
 
-function testChartWithFakeData() {
-    const fakeData = generateFakeData();
-    updateChart(fakeData);
-}
-
-testChartWithFakeData();
 
 // Cập nhật thông tin người dùng
 document.querySelector('.user-name').textContent = 'Jane Smith';
@@ -194,3 +130,21 @@ document.querySelector('.user-id').textContent = 'MSV: 87654321';
 document.querySelector('.user-image').src = 'path/to/new-profile-image.jpg';
 
 
+function logAction(device, action) {
+    const actionData = { device, action };
+
+    fetch('http://localhost:3000/api/actions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(actionData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Action logged:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
