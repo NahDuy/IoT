@@ -4,14 +4,15 @@ let rowsPerPage = 10; // Default value
 
 function fetchActions() {
     fetch('http://localhost:3000/api/actions')
-    .then(response => response.json())
-    .then(data => {
-        actions = data;
-        updateTable(actions);
-    })
-    .catch(error => {
-        console.error('Error fetching actions:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            actions = data;
+
+            updateTable(actions);
+        })
+        .catch(error => {
+            console.error('Error fetching actions:', error);
+        });
 }
 
 fetchActions();
@@ -19,22 +20,28 @@ fetchActions();
 function updateTable(data) {
     const tableBody = document.querySelector('#action-table tbody');
     tableBody.innerHTML = '';
-    
+
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = data.slice(start, end);
-    
+
     paginatedData.forEach(action => {
+        const time = new Date().toISOString(); // Trả về thời gian hiện tại theo UTC
+        const formattedTime = dayjs(time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
+        console.log('Original time:', formattedTime);
+        
+        console.log(time); // Log thời gian để kiểm tra
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${action.id}</td>
             <td>${action.device}</td>
             <td>${action.action}</td>
-            <td>${new Date(action.time).toLocaleString()}</td>
+            <td>${formattedTime}</td>
         `;
         tableBody.appendChild(row);
     });
-    
+
     document.getElementById('page-info').textContent = `Page ${currentPage} of ${Math.ceil(data.length / rowsPerPage)}`;
 }
 
@@ -77,8 +84,6 @@ function filterTable() {
 
 document.getElementById('time-filter').addEventListener('input', filterTable);
 
-
-
 // Event listeners for filters, sorting, and page size change
 document.getElementById('device-filter').addEventListener('change', filterTable);
 document.getElementById('action-filter').addEventListener('change', filterTable);
@@ -86,6 +91,3 @@ document.getElementById('time-filter').addEventListener('input', filterTable);
 document.getElementById('page-size').addEventListener('change', changePageSize);
 document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
-
-
-

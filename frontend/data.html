@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="stylesta.css">
     <link rel="stylesheet" href="style.css" />
     <!-- <link rel="stylesheet" href="globals.css" /> -->
-  
+
 </head>
 
 <body>
@@ -18,7 +18,7 @@
             <a href="index.html" onclick="saveState()" class="nav-button">
                 <img class="icon" src="img/house.svg" />
                 <span class="button-text">User</span>
-              </a>
+            </a>
             <a href="user-info.html" onclick="saveState()" class="nav-button">
                 <img class="icon" src="img/user-1.svg" />
                 <span class="button-text">User</span>
@@ -79,7 +79,7 @@
                 <option value="50">50</option>
             </select>
         </div>
-        
+
     </div>
 
     <script>
@@ -88,10 +88,17 @@
                 window.location.assign("index.html");
             }, 100); // Trì hoãn 100ms để đảm bảo trạng thái được lưu
         }
-        
+
     </script>
 
     <script src="data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_utc);
+        dayjs.extend(window.dayjs_plugin_timezone);
+    </script>
 
 </body>
 

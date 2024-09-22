@@ -130,21 +130,21 @@ document.querySelector('.user-id').textContent = 'MSV: 87654321';
 document.querySelector('.user-image').src = 'path/to/new-profile-image.jpg';
 
 
-function logAction(device, action) {
-    const actionData = { device, action };
+// function logAction(device, action) {
+//     const actionData = { device, action };
 
-    fetch('http://localhost:3000/api/actions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(actionData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Action logged:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
+//     fetch('http://localhost:3000/api/actions', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(actionData),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log('Action logged:', data);
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// }

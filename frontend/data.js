@@ -25,13 +25,15 @@ function updateTable(data) {
     const paginatedData = data.slice(start, end);
 
     paginatedData.forEach(item => {
+        const time = new Date().toISOString(); // Trả về thời gian hiện tại theo UTC
+        const formattedTime = dayjs(time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${item.id}</td>
             <td>${item.temperature}</td>
             <td>${item.humidity}</td>
             <td>${item.light}</td>
-            <td>${new Date(item.time).toLocaleString()}</td>
+            <td>${formattedTime}</td>
         `;
         tableBody.appendChild(row);
     });
