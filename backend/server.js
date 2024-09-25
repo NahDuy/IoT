@@ -9,12 +9,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 // Kết nối với MQTT Broker  
-const ip = '192.168.1.16'; // Địa chỉ IP của MQTT broker
+const ip = '192.168.24.102'; // Địa chỉ IP của MQTT broker
 const mqttUrl = `ws://${ip}:8080`;
-
-
-let actions = [];
-
+    
 const db = mysql.createConnection({
     host: '127.0.0.1',
     port: 3306,  // Chỉ định cổng ở đây
@@ -31,18 +28,29 @@ db.connect(err => {
     }
 });
 // API để nhận và lưu action
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// Khi lưu thời gian vào cơ sở dữ liệu
 app.post('/api/actions', (req, res) => {
     const { device, action } = req.body;
-    const query = 'INSERT INTO actions (device, action) VALUES (?, ?)';
-    db.query(query, [device, action], (err, result) => {
+    const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+    const query = 'INSERT INTO actions (device, action, time) VALUES (?, ?, ?)';
+
+    db.query(query, [device, action, timeInVietnam], (err, result) => {
         if (err) {
             console.error('Lỗi khi chèn vào database:', err);
             res.status(500).send('Lỗi server');
         } else {
-            res.status(201).json({ id: result.insertId, device, action, time: new Date() });
+            res.status(201).json({ id: result.insertId, device, action, time: timeInVietnam });
         }
     });
 });
+
 
 // API để lấy tất cả action
 app.get('/api/actions', (req, res) => {
@@ -70,14 +78,14 @@ mqttClient.on('message', (topic, message) => {
     if (topic === 'esp32/sensors') {
         const sensorData = JSON.parse(message.toString());
         const { temperature, humidity, light } = sensorData;
-
+        const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
         // Lưu dữ liệu vào MySQL, đổi tên bảng thành sensors
-        const query = 'INSERT INTO sensors (temperature, humidity, light) VALUES (?, ?, ?)';
-        db.query(query, [temperature, humidity, light], (err, result) => {
+        const query = 'INSERT INTO sensors (temperature, humidity, light, time) VALUES (?, ?, ?,?)';
+        db.query(query, [temperature, humidity, light,timeInVietnam], (err, result) => {
             if (err) {
                 console.error('Lỗi khi chèn vào database:', err);
             } else {
-                console.log('Dữ liệu cảm biến đã được lưu vào MySQL');
+                // console.log('Dữ liệu cảm biến đã được lưu vào MySQL');
             }
         });
     }
@@ -86,6 +94,7 @@ mqttClient.on('message', (topic, message) => {
 // API để lấy dữ liệu cảm biến
 app.get('/api/sensor-data', (req, res) => {
     const query = 'SELECT * FROM sensors ORDER BY time DESC';
+    
     db.query(query, (err, results) => {
         if (err) {
             console.error('Lỗi khi truy vấn database:', err);

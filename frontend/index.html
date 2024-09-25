@@ -72,6 +72,7 @@
 
                       <div class="chart">
                         <canvas id="chart"></canvas>
+
                       </div>
 
 
@@ -86,7 +87,7 @@
                           <img class="lightbulb" src="img/light-off.png" />
                           <div class="group-19">
                             <div class="overlap-group-5">
-                              <div class="oval-copy-2"></div>
+                              <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
                           <div class="lights">Lamp</div>
@@ -96,7 +97,7 @@
                         <div class="overlap-11">
                           <div class="group-20">
                             <div class="overlap-group-6">
-                              <div class="oval-copy-2"></div>
+                              <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
                           <div class="temperature">Air Conditioner</div>
@@ -107,7 +108,7 @@
                         <div class="overlap-12">
                           <div class="group-20">
                             <div class="overlap-group-7">
-                              <div class="oval-copy-2"></div>
+                              <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
                           <div class="overlap-13">
@@ -153,7 +154,7 @@
       <script>
 
         // Kết nối với MQTT Broker  
-        const ip = '192.168.1.16'; // Địa chỉ IP của MQTT broker
+        const ip = '192.168.24.102'; // Địa chỉ IP của MQTT broker
         const mqttUrl = `ws://${ip}:8080`;
         const client = mqtt.connect(mqttUrl); // Kết nối MQTT
 

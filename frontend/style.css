@@ -1,951 +1,1020 @@
-  /* body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  } */
-  .smart-home {
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    /* height: 100%; */
-    align-items: center;
-  }
-
-  .smart-home .group-wrapper {
-    background-color: #ffffff;
-    overflow: hidden;
-    width: 1511px;
-    height: 1024px;
-  }
-
-  .smart-home .group {
-    position: relative;
-    width: 1503px;
-    height: 996px;
-    left: -13px;
-  }
-
-  .smart-home .div {
-    position: relative;
-    height: 996px;
-  }
-
-  .smart-home .rectangle {
-    position: absolute;
-    width: 780px;
-    height: 424px;
-    top: 447px;
-    left: 225px;
-    background-color: #f9f9f9;
-  }
-
-  .smart-home .div-wrapper {
-    position: absolute;
-    width: 1503px;
-    height: 996px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .overlap {
-    position: absolute;
-    width: 1329px;
-    height: 791px;
-    top: 135px;
-    left: 174px;
-  }
-
-  .smart-home .overlap-wrapper {
-    position: absolute;
-    width: 1329px;
-    height: 791px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .overlap-group {
-    position: relative;
-    height: 791px;
-  }
-
-  .smart-home .rectangle-2 {
-    position: absolute;
-    width: 556px;
-    height: 500px;
-    top: 289px;
-    left: 773px;
-    background-color: #f5f5f5;
-    border-radius: 30px 0px 0px 0px;
-    border: 1px solid;
-    border-color: #ececf49a;
-  }
-
-  .smart-home .overlap-2 {
-    position: absolute;
-    width: 1089px;
-    height: 791px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .header {
-    position: absolute;
-    width: 1089px;
-    height: 264px;
-    top: 0;
-    left: 0;
-    background-color: transparent;
-  }
-
-  .smart-home .group-2 {
-    position: absolute;
-    width: 204px;
-    height: 110px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .div-2 {
-    height: 110px;
-  }
-
-  .smart-home .div-3 {
-    width: 204px;
-    height: 110px;
-  }
-
-  .smart-home .overlap-3 {
-    position: relative;
-    width: 206px;
-    height: 112px;
-    top: -1px;
-    left: -1px;
-    background-color: #d4d3d7;
-    border-radius: 22px;
-  }
-
-  .smart-home .overlap-group-wrapper {
-    position: relative;
-    width: 182px;
-    height: 72px;
-    top: 16px;
-    left: 12px;
-  }
-
-  .smart-home .overlap-4 {
-    position: relative;
-    width: 154px;
-    height: 73px;
-    top: -1px;
-    left: 8px;
-  }
-
-  .smart-home .refridgerator {
-    position: absolute;
-    width: 125px;
-    top: 0;
-    left: 0;
-    font-family: "Mulish", Helvetica;
-    font-weight: 700;
-    color: #ffffff;
-    font-size: 16px;
-    letter-spacing: 0.16px;
-    line-height: 18px;
-  }
-
-  .smart-home .group-3 {
-    position: absolute;
-    width: 75px;
-    height: 36px;
-    top: 5px;
-    left: 19px;
-  }
-
-  .smart-home .group-4 {
-    position: absolute;
-    width: 146px;
-    height: 68px;
-    top: 5px;
-    left: 8px;
-  }
-
-  .smart-home .group-5 {
-    position: relative;
-    width: 135px;
-    height: 40px;
-    top: 28px;
-    left: 11px;
-  }
-
-  .smart-home .path {
-    position: absolute;
-    width: 27px;
-    height: 40px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .group-6 {
-    position: absolute;
-    width: 64px;
-    height: 33px;
-    top: 0;
-    left: 71px;
-  }
-
-  .smart-home .overlap-group-2 {
-    position: relative;
-    width: 77px;
-    height: 18px;
-    top: 6px;
-    left: 1px;
-  }
-
-  .smart-home .text-wrapper {
-    position: absolute;
-    width: 35px;
-    top: 0;
-    left: 0;
-    font-family: "Lato", Helvetica;
-    font-weight: 700;
-    color: #242424;
-    font-size: 25px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: 18px;
-  }
-
-  .smart-home .text-wrapper-2 {
-    position: absolute;
-    width: 19px;
-    top: 0;
-    left: 40px;
-    font-family: "Lato", Helvetica;
-    font-weight: 700;
-    color: #242424;
-    font-size: 25px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: 18px;
-  }
-
-  .smart-home .oval {
-    position: absolute;
-    width: 6px;
-    height: 5px;
-    top: 1px;
-    left: 35px;
-    border-radius: 3px/2.5px;
-    border: 0.84px solid;
-    border-color: #242424;
-  }
-
-  .smart-home .group-7 {
-    position: absolute;
-    width: 204px;
-    height: 110px;
-    top: 1px;
-    left: 569px;
-  }
-
-  .smart-home .overlap-5 {
-    position: relative;
-    width: 206px;
-    height: 112px;
-    top: -1px;
-    left: -1px;
-    background-color: #dadd5b;
-    border-radius: 22px;
-  }
-
-  .smart-home .group-8 {
-    height: 61px;
-    position: absolute;
-    width: 146px;
-    top: 5px;
-    left: 8px;
-  }
-
-  .smart-home .group-9 {
-    position: relative;
-    width: 64px;
-    height: 33px;
-    top: 28px;
-    left: 82px;
-  }
-
-  .smart-home .group-10 {
-    height: 33px;
-  }
-
-  .smart-home .bolt-lightning {
-    position: absolute;
-    width: 29px;
-    height: 43px;
-    top: 30px;
-    left: 16px;
-  }
-
-  .smart-home .group-11 {
-    position: absolute;
-    width: 204px;
-    height: 110px;
-    top: 1px;
-    left: 283px;
-  }
-
-  .smart-home .overlap-6 {
-    position: relative;
-    width: 206px;
-    height: 112px;
-    top: -1px;
-    left: -1px;
-    background-color: #d7cdeb;
-    border-radius: 22px;
-  }
-
-  .smart-home .overlap-group-3 {
-    position: relative;
-    width: 154px;
-    height: 69px;
-    top: -1px;
-    left: 8px;
-  }
-
-  .smart-home .group-12 {
-    height: 64px;
-    position: absolute;
-    width: 146px;
-    top: 5px;
-    left: 8px;
-  }
-
-  .smart-home .group-13 {
-    position: relative;
-    width: 129px;
-    height: 38px;
-    top: 26px;
-    left: 17px;
-  }
-
-  .smart-home .group-14 {
-    position: absolute;
-    width: 64px;
-    height: 33px;
-    top: 2px;
-    left: 66px;
-  }
-
-  .smart-home .text-wrapper-3 {
-    width: 35px;
-    top: 6px;
-    left: 1px;
-    font-weight: 700;
-    color: #242424;
-    font-size: 25px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: 18px;
-    position: absolute;
-    font-family: "Lato", Helvetica;
-  }
-
-  .smart-home .c {
-    top: 6px;
-    left: 41px;
-    position: absolute;
-    width: 19px;
-    font-family: "Lato", Helvetica;
-    font-weight: 700;
-    color: #242424;
-    font-size: 25px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: 18px;
-  }
-
-  .smart-home .img {
-    position: absolute;
-    width: 27px;
-    height: 38px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .chart {
-    position: absolute;
-    width: 773px;
-    height: 613px;
-    top: 178px;
-    left: 0;
-  }
-
-  .chart {
-    width: 100%;
-    height: 400px;
-    /* Adjust as needed */
-  }
-
-  #chart {
-    width: 100%;
-    height: 100%;
-  }
-
-
-  .smart-home .path-path-path {
-    height: 613px;
-  }
-
-  .smart-home .overlap-7 {
-    position: relative;
-    width: 773px;
-    height: 613px;
-  }
-
-  .smart-home .mask {
-    position: absolute;
-    width: 773px;
-    height: 601px;
-    top: 0;
-    left: 0;
-    background-color: #ffffff;
-    border-radius: 28px;
-    border: 1px solid;
-    border-color: #e6e5f1cf;
-  }
-
-  .smart-home .mask-group {
-    position: absolute;
-    width: 629px;
-    height: 347px;
-    top: 266px;
-    left: 80px;
-  }
-
-  .smart-home .group-15 {
-    position: absolute;
-    width: 348px;
-    height: 57px;
-    top: 33px;
-    left: 38px;
-  }
-
-  .smart-home .overlap-group-4 {
-    position: relative;
-    width: 168px;
-    height: 57px;
-  }
-
-  .smart-home .oval-copy-wrapper {
-    position: absolute;
-    width: 50px;
-    height: 57px;
-    top: 0;
-    left: 0;
-    border-radius: 25px/28.5px;
-    border: 1px solid;
-    border-color: #ff9060;
-  }
-
-  .smart-home .oval-copy {
-    position: relative;
-    width: 33px;
-    height: 38px;
-    top: 9px;
-    left: 7px;
-    background-color: #ff9060;
-    border-radius: 16.62px/18.81px;
-  }
-
-  .smart-home .electricity-consumed {
-    position: absolute;
-    top: 20px;
-    left: 49px;
-    font-family: "Mulish", Helvetica;
-    font-weight: 600;
-    color: #242424;
-    font-size: 25px;
-    letter-spacing: 0.13px;
-    line-height: 16px;
-    white-space: nowrap;
-  }
-
-  .smart-home .group-16 {
-    position: absolute;
-    width: 557px;
-    height: 288px;
-    top: 254px;
-    left: 118px;
-  }
-
-  .smart-home .overlap-8 {
-    position: absolute;
-    width: 555px;
-    height: 26px;
-    top: -1px;
-    left: 0;
-  }
-
-  .smart-home .path-2 {
-    position: absolute;
-    width: 555px;
-    height: 1px;
-    top: 12px;
-    left: 0;
-  }
-
-  .smart-home .oval-2 {
-    position: absolute;
-    width: 25px;
-    height: 26px;
-    top: 0;
-    left: 433px;
-    background-color: #ff9060;
-    border-radius: 12.64px/12.86px;
-    border: 2px solid;
-    border-color: #ffffff;
-    box-shadow: 0px 1px 7px #ff9060b8;
-  }
-
-  .smart-home .overlap-9 {
-    position: absolute;
-    width: 555px;
-    height: 254px;
-    top: 34px;
-    left: 0;
-  }
-
-  .smart-home .path-3 {
-    top: 60px;
-    position: absolute;
-    width: 555px;
-    height: 1px;
-    left: 0;
-  }
-
-  .smart-home .path-4 {
-    top: 143px;
-    position: absolute;
-    width: 555px;
-    height: 1px;
-    left: 0;
-  }
-
-  .smart-home .path-5 {
-    top: 226px;
-    position: absolute;
-    width: 555px;
-    height: 1px;
-    left: 0;
-  }
-
-  .smart-home .path-6 {
-    position: absolute;
-    width: 1px;
-    height: 254px;
-    top: 0;
-    left: 443px;
-  }
-
-  .smart-home .group-17 {
-    position: absolute;
-    width: 45px;
-    height: 276px;
-    top: 252px;
-    left: 32px;
-  }
-
-  .smart-home .text-wrapper-4 {
-    position: absolute;
-    width: 43px;
-    top: 56px;
-    left: 0;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 600;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: normal;
-  }
-
-  .smart-home .text-wrapper-5 {
-    top: 105px;
-    position: absolute;
-    width: 43px;
-    left: 0;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 600;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: normal;
-  }
-
-  .smart-home .text-wrapper-6 {
-    top: 154px;
-    position: absolute;
-    width: 43px;
-    left: 0;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 600;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: normal;
-  }
-
-  .smart-home .text-wrapper-7 {
-    width: 13px;
-    top: 203px;
-    left: 0;
-    opacity: 0.6;
-    font-weight: 600;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: normal;
-    position: absolute;
-    font-family: "Lato", Helvetica;
-  }
-
-  .smart-home .group-18 {
-    position: absolute;
-    width: 569px;
-    height: 25px;
-    top: 542px;
-    left: 86px;
-  }
-
-  .smart-home .text-wrapper-8 {
-    position: absolute;
-    width: 33px;
-    top: 5px;
-    left: 0;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-9 {
-    position: absolute;
-    width: 37px;
-    top: 5px;
-    left: 70px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-10 {
-    position: absolute;
-    width: 40px;
-    top: 5px;
-    left: 143px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-11 {
-    position: absolute;
-    width: 37px;
-    top: 5px;
-    left: 219px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-12 {
-    width: 43px;
-    left: 293px;
-    position: absolute;
-    top: 5px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-13 {
-    width: 47px;
-    left: 372px;
-    position: absolute;
-    top: 5px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-14 {
-    position: absolute;
-    width: 35px;
-    top: 5px;
-    left: 456px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .text-wrapper-15 {
-    position: absolute;
-    width: 40px;
-    top: 5px;
-    left: 529px;
-    opacity: 0.6;
-    font-family: "Lato", Helvetica;
-    font-weight: 500;
-    color: #9897ad;
-    font-size: 13px;
-    letter-spacing: 0.19px;
-    line-height: 15px;
-  }
-
-  .smart-home .devices {
-    position: absolute;
-    width: 496px;
-    height: 411px;
-    top: 312px;
-    left: 803px;
-  }
-
-  .smart-home .devices-wrapper {
-    height: 411px;
-  }
-
-  .smart-home .devices-2 {
-    position: relative;
-    width: 496px;
-    height: 411px;
-  }
-
-  .smart-home .lamp {
-    position: absolute;
-    width: 498px;
-    height: 126px;
-    top: 147px;
-    left: 0;
-  }
-
-  .smart-home .overlap-10 {
-    position: relative;
-    width: 532px;
-    height: 162px;
-    top: -12px;
-    left: -18px;
-    background-image: url(./img/rectangle.svg);
-    background-size: 100% 100%;
-  }
-
-  .smart-home .lightbulb {
-    position: absolute;
-    width: 74px;
-    height: 71px;
-    top: 51px;
-    left: 226px;
-  }
-
-  .smart-home .group-19 {
-    position: absolute;
-    width: 77px;
-    height: 30px;
-    top: 67px;
-    left: 421px;
-  }
-
-  .smart-home .overlap-group-5 {
-    position: relative;
-    width: 87px;
-    height: 40px;
-    top: -4px;
-    left: -5px;
-    background-image: url(./img/rectangle-1.svg);
-    background-size: 100% 100%;
-  }
-
-  .smart-home .oval-copy-2 {
-    position: relative;
-    width: 42px;
-    height: 30px;
-    top: 4px;
-    left: 39px;
-    background-color: #6e5be9;
-    border-radius: 21.08px/14.92px;
-    box-shadow: 0px 1px 3px #4848486c;
-  }
-
-  .smart-home .lights {
-    position: absolute;
-    width: 86px;
-    top: 32px;
-    left: 36px;
-    font-family: "Mulish", Helvetica;
-    font-weight: 700;
-    color: #ffffff;
-    font-size: 25px;
-    letter-spacing: 0.14px;
-    line-height: 18px;
-  }
-
-  .smart-home .air {
-    position: absolute;
-    width: 498px;
-    height: 126px;
-    top: 0;
-    left: 0;
-  }
-
-  .smart-home .overlap-11 {
-    position: relative;
-    height: 128px;
-    top: -1px;
-    left: -1px;
-    background-color: #7a40f2;
-    border-radius: 25px;
-    box-shadow: 0px 6px 18px #7e77efce;
-  }
-
-  .smart-home .group-20 {
-    position: absolute;
-    width: 77px;
-    height: 30px;
-    top: 49px;
-    left: 404px;
-  }
-
-  .smart-home .overlap-group-6 {
-    position: relative;
-    width: 87px;
-    height: 40px;
-    top: -4px;
-    left: -5px;
-    background-image: url(./img/rectangle-3.svg);
-    background-size: 100% 100%;
-  }
-
-  .smart-home .temperature {
-    position: absolute;
-    width: 239px;
-    /* top: 14px; */
-    left: 19px;
-    font-family: "Mulish", Helvetica;
-    font-weight: 700;
-    color: #ffffff;
-    font-size: 25px;
-    letter-spacing: 0.14px;
-    line-height: 18px;
-  }
-
-  .smart-home .air-conditioner {
-    position: absolute;
-    width: 111px;
-    height: 111px;
-    top: 36px;
-    left: 194px;
-  }
-
-  .smart-home .fan {
-    position: absolute;
-    width: 498px;
-    height: 126px;
-    top: 285px;
-    left: 0;
-  }
-
-  .smart-home .overlap-12 {
-    position: relative;
-    height: 128px;
-    top: -1px;
-    left: -1px;
-    background-color: #40d1f2;
-    border-radius: 25px;
-    box-shadow: 0px 6px 18px #7e77efce;
-  }
-
-  .smart-home .overlap-group-7 {
-    position: relative;
-    width: 87px;
-    height: 40px;
-    top: -4px;
-    left: -5px;
-    background-image: url(./img/rectangle-4.svg);
-    background-size: 100% 100%;
-  }
-
-  .smart-home .overlap-13 {
-    position: absolute;
-    width: 267px;
-    height: 72px;
-    top: 30px;
-    left: 19px;
-  }
-
-  .smart-home .temperature-2 {
-    position: absolute;
-    width: 239px;
-    top: 0;
-    left: 0;
-    font-family: "Mulish", Helvetica;
-    font-weight: 700;
-    color: #ffffff;
-    font-size: 25px;
-    letter-spacing: 0.14px;
-    line-height: 18px;
-  }
-
-  .smart-home .fan-table {
-    position: absolute;
-    width: 74px;
-    height: 71px;
-    top: 1px;
-    left: 193px;
-  }
-
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.smart-home {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100vw;
+  /* Full width of the viewport */
+  height: 100vh;
+  /* Full height of the viewport */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+.smart-home .group-wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  /* Make the width 100% */
+  height: auto;
+  /* Set height to auto to allow dynamic adjustment */
+  box-sizing: border-box;
+}
+
+.smart-home .group {
+  position: relative;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  left: 0;
+  top: 0;
+}
+
+.smart-home .div {
+  position: relative;
+  height: 996px;
+}
+
+.smart-home .rectangle {
+  position: absolute;
+  width: 780px;
+  height: 424px;
+  top: 447px;
+  left: 225px;
+  background-color: #f9f9f9;
+}
+
+.smart-home .div-wrapper {
+  position: absolute;
+  width: 67%;
+  height: 996px;
+  top: 0;
+  left: 0;
+}
+
+.smart-home .overlap {
+  position: absolute;
+  width: 130%;
+  height: 100%;
+  top: 230px;
+  left: 174px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
+  /* Chia đều không gian giữa các thẻ */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
+  padding: 20px;
+  /* Thêm khoảng cách tổng thể */
+  width: 100%;
+  /* Chiếm toàn bộ chiều ngang màn hình */
+  height: 200px;
+  /* Thiết lập chiều cao phù hợp */
+  box-sizing: border-box;
+  /* Đảm bảo padding không làm tăng kích thước tổng */
+}
+
+.header .group-2,
+.header .group-7,
+.header .group-11 {
+  border: 2px solid #000;
+  /* Viền xung quanh thẻ */
+  padding: 20px;
+  /* Khoảng cách bên trong thẻ */
+  margin: 10px;
+  /* Khoảng cách giữa các thẻ */
+  width: 200px;
+  /* Thiết lập chiều rộng hợp lý */
+  height: 150px;
+  /* Đảm bảo chiều cao đồng đều */
+  text-align: center;
+  /* Căn giữa nội dung bên trong thẻ */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* Thêm đổ bóng nhẹ để tạo cảm giác nổi */
+  border-radius: 8px;
+  /* Làm bo tròn các góc để mềm mại hơn */
+  background-color: #f9f9f9;
+  /* Màu nền nhẹ để tạo độ tương phản */
+}
+
+
+.smart-home .overlap-wrapper {
+  position: absolute;
+  width: 1329px;
+  height: 791px;
+  top: 0;
+  left: 0;
+}
+
+.smart-home .overlap-group {
+  position: relative;
+  height: 791px;
+}
+
+.smart-home .rectangle-2 {
+  position: absolute;
+  width: 556px;
+  height: 500px;
+  top: 289px;
+  left: 773px;
+  background-color: #f5f5f5;
+  border-radius: 30px 0px 0px 0px;
+  border: 1px solid;
+  border-color: #ececf49a;
+}
+
+.smart-home .overlap-2 {
+  position: absolute;
+  width: 100%;
+  height: 791px;
+  top: 0;
+  left: 0;
+}
+
+.smart-home .header {
+  position: absolute;
+  width: 100%;
+  height: 264px;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+}
+
+.smart-home .group-2 {
+  position: absolute;
+  width: 265px;
+  height: 172px;
+  top: -232px;
+  left: -36px;
+}
+
+.smart-home .div-2 {
+  height: 110px;
+}
+
+.smart-home .div-3 {
+  width: 204px;
+  height: 110px;
+}
+
+.smart-home .overlap-3 {
+  position: relative;
+  width: 206px;
+  height: 112px;
+  top: -1px;
+  left: -1px;
+  background-color: #d4d3d7;
+  border-radius: 22px;
+}
+
+.smart-home .overlap-group-wrapper {
+  position: relative;
+  width: 182px;
+  height: 72px;
+  top: 16px;
+  left: 12px;
+}
+
+.smart-home .overlap-4 {
+  position: relative;
+  width: 154px;
+  height: 73px;
+  top: -1px;
+  left: 8px;
+}
+
+.smart-home .refridgerator {
+  position: absolute;
+  width: 125px;
+  top: 0;
+  left: 0;
+  font-family: "Mulish", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: 0.16px;
+  line-height: 18px;
+}
+
+.smart-home .group-3 {
+  position: absolute;
+  width: 75px;
+  height: 36px;
+  top: 5px;
+  left: 19px;
+}
+
+.smart-home .group-4 {
+  position: absolute;
+  width: 146px;
+  height: 68px;
+  top: 5px;
+  left: 8px;
+}
+
+.smart-home .group-5 {
+  position: relative;
+  width: 135px;
+  height: 40px;
+  top: 28px;
+  left: 11px;
+}
+
+.smart-home .path {
+  position: absolute;
+  width: 27px;
+  height: 40px;
+  top: 0;
+  left: 0;
+}
+
+.smart-home .group-6 {
+  position: absolute;
+  width: 64px;
+  height: 33px;
+  top: 0;
+  left: 71px;
+}
+
+.smart-home .overlap-group-2 {
+  position: relative;
+  width: 77px;
+  height: 18px;
+  top: 6px;
+  left: 1px;
+}
+
+.smart-home .text-wrapper {
+  position: absolute;
+  width: 35px;
+  top: 0;
+  left: 0;
+  font-family: "Lato", Helvetica;
+  font-weight: 700;
+  color: #242424;
+  font-size: 25px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 18px;
+}
+
+.smart-home .text-wrapper-2 {
+  position: absolute;
+  width: 19px;
+  top: 0;
+  left: 40px;
+  font-family: "Lato", Helvetica;
+  font-weight: 700;
+  color: #242424;
+  font-size: 25px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 18px;
+}
+
+.smart-home .oval {
+  position: absolute;
+  width: 6px;
+  height: 5px;
+  top: 1px;
+  left: 35px;
+  border-radius: 3px/2.5px;
+  border: 0.84px solid;
+  border-color: #242424;
+}
+
+.smart-home .group-7 {
+  position: absolute;
+  width: 265px;
+  height: 172px;
+  top: -232px;
+  left: 18%;
+}
+
+.smart-home .overlap-5 {
+  position: relative;
+  width: 206px;
+  height: 112px;
+  top: -1px;
+  left: -1px;
+  background-color: #dadd5b;
+  border-radius: 22px;
+}
+
+.smart-home .group-8 {
+  height: 61px;
+  position: absolute;
+  width: 146px;
+  top: 5px;
+  left: 8px;
+}
+
+.smart-home .group-9 {
+  position: relative;
+  width: 64px;
+  height: 33px;
+  top: 28px;
+  left: 82px;
+}
+
+.smart-home .group-10 {
+  height: 33px;
+}
+
+.smart-home .bolt-lightning {
+  position: absolute;
+  width: 29px;
+  height: 43px;
+  top: 30px;
+  left: 16px;
+}
+
+.smart-home .group-11 {
+  position: absolute;
+  width: 265px;
+  height: 172px;
+  top: -232px;
+  left: 39%;
+}
+
+.smart-home .overlap-6 {
+  position: relative;
+  width: 206px;
+  height: 112px;
+  top: -1px;
+  left: -1px;
+  background-color: #d7cdeb;
+  border-radius: 22px;
+}
+
+.smart-home .overlap-group-3 {
+  position: relative;
+  width: 154px;
+  height: 69px;
+  top: -1px;
+  left: 8px;
+}
+
+.smart-home .group-12 {
+  height: 64px;
+  position: absolute;
+  width: 146px;
+  top: 5px;
+  left: 8px;
+}
+
+.smart-home .group-13 {
+  position: relative;
+  width: 129px;
+  height: 38px;
+  top: 26px;
+  left: 17px;
+}
+
+.smart-home .group-14 {
+  position: absolute;
+  width: 64px;
+  height: 33px;
+  top: 2px;
+  left: 66px;
+}
+
+.smart-home .text-wrapper-3 {
+  width: 35px;
+  top: 6px;
+  left: 1px;
+  font-weight: 700;
+  color: #242424;
+  font-size: 25px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 18px;
+  position: absolute;
+  font-family: "Lato", Helvetica;
+}
+
+.smart-home .c {
+  top: 6px;
+  left: 41px;
+  position: absolute;
+  width: 19px;
+  font-family: "Lato", Helvetica;
+  font-weight: 700;
+  color: #242424;
+  font-size: 25px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 18px;
+}
+
+.smart-home .img {
+  position: absolute;
+  width: 27px;
+  height: 38px;
+  top: 0;
+  left: 0;
+}
+
+.smart-home .chart {
+  position: absolute;
+  width: 673px;
+  height: 500px;
+  top: 25px;
+  left: 53px;
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  /* Adjust the height based on content */
+}
+
+#chart {
+  width: 100%;
+  height: 100%;
+  /* Make the chart responsive */
+}
+
+
+.smart-home .path-path-path {
+  height: 613px;
+}
+
+.smart-home .overlap-7 {
+  position: relative;
+  width: 773px;
+  height: 613px;
+}
+
+.smart-home .mask {
+  position: absolute;
+  width: 773px;
+  height: 601px;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  border-radius: 28px;
+  border: 1px solid;
+  border-color: #e6e5f1cf;
+}
+
+.smart-home .mask-group {
+  position: absolute;
+  width: 629px;
+  height: 347px;
+  top: 266px;
+  left: 80px;
+}
+
+.smart-home .group-15 {
+  position: absolute;
+  width: 348px;
+  height: 57px;
+  top: 33px;
+  left: 38px;
+}
+
+.smart-home .overlap-group-4 {
+  position: relative;
+  width: 168px;
+  height: 57px;
+}
+
+.smart-home .oval-copy-wrapper {
+  position: absolute;
+  width: 50px;
+  height: 57px;
+  top: 0;
+  left: 0;
+  border-radius: 25px/28.5px;
+  border: 1px solid;
+  border-color: #ff9060;
+}
+
+.smart-home .oval-copy {
+  position: relative;
+  width: 33px;
+  height: 38px;
+  top: 9px;
+  left: 7px;
+  background-color: #ff9060;
+  border-radius: 16.62px/18.81px;
+}
+
+.smart-home .electricity-consumed {
+  position: absolute;
+  top: 20px;
+  left: 49px;
+  font-family: "Mulish", Helvetica;
+  font-weight: 600;
+  color: #242424;
+  font-size: 25px;
+  letter-spacing: 0.13px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.smart-home .group-16 {
+  position: absolute;
+  width: 557px;
+  height: 288px;
+  top: 254px;
+  left: 118px;
+}
+
+.smart-home .overlap-8 {
+  position: absolute;
+  width: 555px;
+  height: 26px;
+  top: -1px;
+  left: 0;
+}
+
+.smart-home .path-2 {
+  position: absolute;
+  width: 555px;
+  height: 1px;
+  top: 12px;
+  left: 0;
+}
+
+.smart-home .oval-2 {
+  position: absolute;
+  width: 25px;
+  height: 26px;
+  top: 0;
+  left: 433px;
+  background-color: #ff9060;
+  border-radius: 12.64px/12.86px;
+  border: 2px solid;
+  border-color: #ffffff;
+  box-shadow: 0px 1px 7px #ff9060b8;
+}
+
+.smart-home .overlap-9 {
+  position: absolute;
+  width: 555px;
+  height: 254px;
+  top: 34px;
+  left: 0;
+}
+
+.smart-home .path-3 {
+  top: 60px;
+  position: absolute;
+  width: 555px;
+  height: 1px;
+  left: 0;
+}
+
+.smart-home .path-4 {
+  top: 143px;
+  position: absolute;
+  width: 555px;
+  height: 1px;
+  left: 0;
+}
+
+.smart-home .path-5 {
+  top: 226px;
+  position: absolute;
+  width: 555px;
+  height: 1px;
+  left: 0;
+}
+
+.smart-home .path-6 {
+  position: absolute;
+  width: 1px;
+  height: 254px;
+  top: 0;
+  left: 443px;
+}
+
+.smart-home .group-17 {
+  position: absolute;
+  width: 45px;
+  height: 276px;
+  top: 252px;
+  left: 32px;
+}
+
+.smart-home .text-wrapper-4 {
+  position: absolute;
+  width: 43px;
+  top: 56px;
+  left: 0;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 600;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: normal;
+}
+
+.smart-home .text-wrapper-5 {
+  top: 105px;
+  position: absolute;
+  width: 43px;
+  left: 0;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 600;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: normal;
+}
+
+.smart-home .text-wrapper-6 {
+  top: 154px;
+  position: absolute;
+  width: 43px;
+  left: 0;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 600;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: normal;
+}
+
+.smart-home .text-wrapper-7 {
+  width: 13px;
+  top: 203px;
+  left: 0;
+  opacity: 0.6;
+  font-weight: 600;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: normal;
+  position: absolute;
+  font-family: "Lato", Helvetica;
+}
+
+.smart-home .group-18 {
+  position: absolute;
+  width: 569px;
+  height: 25px;
+  top: 542px;
+  left: 86px;
+}
+
+.smart-home .text-wrapper-8 {
+  position: absolute;
+  width: 33px;
+  top: 5px;
+  left: 0;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-9 {
+  position: absolute;
+  width: 37px;
+  top: 5px;
+  left: 70px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-10 {
+  position: absolute;
+  width: 40px;
+  top: 5px;
+  left: 143px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-11 {
+  position: absolute;
+  width: 37px;
+  top: 5px;
+  left: 219px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-12 {
+  width: 43px;
+  left: 293px;
+  position: absolute;
+  top: 5px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-13 {
+  width: 47px;
+  left: 372px;
+  position: absolute;
+  top: 5px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-14 {
+  position: absolute;
+  width: 35px;
+  top: 5px;
+  left: 456px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .text-wrapper-15 {
+  position: absolute;
+  width: 40px;
+  top: 5px;
+  left: 529px;
+  opacity: 0.6;
+  font-family: "Lato", Helvetica;
+  font-weight: 500;
+  color: #9897ad;
+  font-size: 13px;
+  letter-spacing: 0.19px;
+  line-height: 15px;
+}
+
+.smart-home .devices {
+  position: absolute;
+  top: 50%;
+  /* Canh giữa theo chiều dọc */
+  right: 20px;
+  /* Canh lề phải */
+  transform: translateY(-50%);
+  /* Dịch chuyển để đảm bảo canh giữa */
+  width: auto;
+  height: auto;
+}
+
+.smart-home .devices-wrapper {
+  height: 411px;
+}
+
+.smart-home .devices-2 {
+  position: relative;
+  width: 496px;
+  height: 411px;
+}
+
+.smart-home .lamp {
+  position: absolute;
+  width: 480px;
+  height: 156px;
+  top: -70%;
+  left: 50px;
+}
+
+/* 
+.smart-home .overlap-10 {
+  position: relative;
+  width: 532px;
+  height: 180px;
+  top: -12px;
+  left: -18px;
+  background-image: url(./img/rectangle.svg);
+  background-size: 100% 100%;
+} */
+
+.smart-home .lightbulb {
+  position: absolute;
+  width: 170px;
+  height: 150px;
+  top: 32px;
+  left: 97px;
+}
+
+.smart-home .group-19 {
+  position: absolute;
+  width: 77px;
+  height: 30px;
+  top: 67px;
+  left: 421px;
+}
+
+.smart-home .overlap-group-5 {
+  position: relative;
+  width: 87px;
+  height: 40px;
+  top: -4px;
+  left: -48px;
+  background-image: url(./img/rectangle-1.svg);
+  background-size: 100% 100%;
+}
+
+.smart-home .oval-copy-2 {
+  position: relative;
+  width: 42px;
+  height: 30px;
+  top: 4px;
+  left: 39px;
+  background-color: #6e5be9;
+  border-radius: 21.08px/14.92px;
+  box-shadow: 0px 1px 3px #4848486c;
+}
+
+.smart-home .lights {
+  position: absolute;
+  width: 86px;
+  top: 32px;
+  left: 36px;
+  font-family: "Mulish", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 25px;
+  letter-spacing: 0.14px;
+  line-height: 18px;
+}
+
+.smart-home .air {
+  position: absolute;
+  width: 480px;
+  height: 156px;
+  top: -120%;
+  left: 50px;
+}
+
+.smart-home .overlap-11 {
+  position: relative;
+  height: 180px;
+  top: -1px;
+  left: -1px;
+  background-color: #7a40f2;
+  border-radius: 25px;
+  box-shadow: 0px 6px 18px #7e77efce;
+}
+
+.smart-home .overlap-10 {
+  position: relative;
+  height: 180px;
+  top: -1px;
+  left: -1px;
+  background-color: hsl(190, 72%, 42%);
+  border-radius: 25px;
+  box-shadow: 0px 6px 18px #7e77efce;
+}
+
+.smart-home .group-20 {
+  position: absolute;
+  width: 77px;
+  height: 30px;
+  top: 49px;
+  left: 404px;
+}
+
+.smart-home .overlap-group-6 {
+  position: relative;
+  width: 87px;
+  height: 40px;
+  top: -4px;
+  left: -30px;
+  background-image: url(./img/rectangle-3.svg);
+  background-size: 100% 100%;
+}
+
+.smart-home .temperature {
+  position: absolute;
+  width: 239px;
+  /* top: 14px; */
+  left: 19px;
+  font-family: "Mulish", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 25px;
+  letter-spacing: 0.14px;
+  line-height: 18px;
+}
+
+.smart-home .air-conditioner {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  top: -15px;
+  left: 40px;
+}
+
+.smart-home .fan {
+  position: absolute;
+  width: 480px;
+  height: 156px;
+  top: -15%;
+  left: 50px;
+}
+
+.smart-home .overlap-12 {
+  position: relative;
+  height: 180px;
+  top: -1px;
+  left: -1px;
+  background-color: #40d1f2;
+  border-radius: 25px;
+  box-shadow: 0px 6px 18px #7e77efce;
+}
+
+.smart-home .overlap-group-7 {
+  position: relative;
+  width: 87px;
+  height: 40px;
+  top: -4px;
+  left: -30px;
+  background-image: url(./img/rectangle-4.svg);
+  background-size: 100% 100%;
+}
+
+.smart-home .overlap-13 {
+  position: absolute;
+  width: 267px;
+  height: 72px;
+  top: 30px;
+  left: 19px;
+}
+
+.smart-home .temperature-2 {
+  position: absolute;
+  width: 239px;
+  top: 0;
+  left: 0;
+  font-family: "Mulish", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 25px;
+  letter-spacing: 0.14px;
+  line-height: 18px;
+}
+
+.smart-home .fan-table {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  top: 6px;
+  left: 92px;
+}
+
+/* 
   .smart-home .nav {
     position: absolute;
     width: 118px;
     height: 996px;
     top: 0;
     left: 0;
-  }
+  } */
 
-  /* .smart-home .user-wrapper {
+/* .smart-home .user-wrapper {
     position: relative;
     width: 105px;
     height: 996px;
@@ -962,169 +1031,170 @@
     left: 19px;
   } */
 
-  /* Thiết lập ban đầu cho nút bật/tắt */
-  .smart-home .group-20 {
-    cursor: pointer;
-  }
+/* Thiết lập ban đầu cho nút bật/tắt */
+.smart-home .group-20 {
+  cursor: pointer;
+}
 
-  .smart-home .group-19 {
-    cursor: pointer;
-  }
+.smart-home .group-19 {
+  cursor: pointer;
+}
 
-  .smart-home .overlap-group-6,
-  .smart-home .overlap-group-7,
-  .smart-home .overlap-group-5 {
-    position: relative;
-    width: 50px;
-    /* Đặt kích thước tùy chỉnh */
-    height: 25px;
-    background-color: #ccc;
-    /* Màu nền khi tắt */
-    border-radius: 15px;
-    transition: background-color 0.3s ease;
-  }
+.smart-home .overlap-group-6,
+.smart-home .overlap-group-7,
+.smart-home .overlap-group-5 {
+  position: relative;
+  /* right: 5px; */
+  width: 92px;
+  height: 67px;
+  background-color: #ccc;
+  border-radius: 14px;
+  transition: background-color 0.3s ease;
+}
 
-  .smart-home .oval-copy-2 {
-    position: absolute;
-    width: 23px;
-    height: 23px;
-    background-color: #fff;
-    /* Màu của vòng tròn */
-    border-radius: 50%;
-    top: 1px;
-    left: 1px;
-    transition: left 0.3s ease;
-  }
+.smart-home .oval-copy-2 {
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  background-color: #fff;
+  /* Màu của vòng tròn */
+  border-radius: 50%;
+  top: 1px;
+  left: 1px;
+  transition: left 0.3s ease;
+}
 
-  /* Khi nút được bật */
-  .smart-home .group-20.active .overlap-group-6,
-  .smart-home .group-20.active .overlap-group-7,
-  .smart-home .group-19.active .overlap-group-5 {
-    background-color: #4CAF50;
-    /* Màu nền khi bật */
-  }
+/* Khi nút được bật */
+.smart-home .group-20.active .overlap-group-6,
+.smart-home .group-20.active .overlap-group-7,
+.smart-home .group-19.active .overlap-group-5 {
+  background-color: #4CAF50;
+  /* Màu nền khi bật */
+}
 
-  .smart-home .group-20.active .oval-copy-2 {
-    left: 26px;
-    /* Di chuyển vòng tròn sang phải khi bật */
-  }
+.smart-home .group-20.active .oval-copy-2 {
+  left: 26px;
+  /* Di chuyển vòng tròn sang phải khi bật */
+}
 
-  .smart-home .group-19.active .oval-copy-2 {
-    left: 26px;
-    /* Di chuyển vòng tròn sang phải khi bật */
-  }
+.smart-home .group-19.active .oval-copy-2 {
+  left: 26px;
+  /* Di chuyển vòng tròn sang phải khi bật */
+}
 
-  .group-4 #weather-icon {
-    margin-top: -20px;
-    margin-left: -20px;
-  }
+.group-4 #weather-icon {
+  margin-top: -20px;
+  margin-left: -20px;
+}
 
-  /* Example of media query for responsiveness */
-  @media (max-width: 1200px) {
-    .smart-home .group-wrapper {
-      width: 90%;
-      /* Adjust width to be more responsive */
-      height: auto;
-      /* Allow height to adjust automatically */
-    }
-
-    .smart-home .group {
-      width: 100%;
-      height: auto;
-      left: 0;
-      /* Center the group */
-    }
-
-    .smart-home .rectangle,
-    .smart-home .rectangle-2 {
-      width: 100%;
-      /* Make full width */
-      height: auto;
-      top: auto;
-      left: 0;
-    }
-
-    .user-wrapper a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      text-decoration: none;
-      /* Remove underline */
-      color: inherit;
-      /* Inherit color to keep styling consistent */
-    }
-
-    .smart-home .overlap,
-    .smart-home .overlap-2,
-    .smart-home .overlap-3 {
-      width: 100%;
-      height: auto;
-      top: auto;
-      left: 0;
-    }
-  }
-
-  /* Flexbox layout example */
-  .smart-home {
-    display: flex;
-    flex-wrap: wrap;
-    /* Allows items to wrap to next line if necessary */
-    justify-content: space-around;
-    /* Space items evenly */
-  }
-
+/* Example of media query for responsiveness */
+@media (max-width: 1200px) {
   .smart-home .group-wrapper {
-    flex: 1 1 45%;
-    /* Flexible box with base width of 45% */
-    margin: 10px;
-    box-sizing: border-box;
+    width: 90%;
+    /* Adjust width to be more responsive */
+    height: auto;
+    /* Allow height to adjust automatically */
+  }
+
+  .smart-home .group {
+    width: 100%;
+    height: auto;
+    left: 0;
+    /* Center the group */
   }
 
   .smart-home .rectangle,
   .smart-home .rectangle-2 {
     width: 100%;
-    padding-top: 56.25%;
-    /* 16:9 aspect ratio */
-    position: relative;
-  }
-
-  .smart-home .rectangle::before,
-  .smart-home .rectangle-2::before {
-    content: "";
-    display: block;
-    padding-top: 56.25%;
-    /* 16:9 aspect ratio */
-  }
-
-  .smart-home .rectangle,
-  .smart-home .rectangle-2 {
-    position: absolute;
-    top: 0;
+    /* Make full width */
+    height: auto;
+    top: auto;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #f5f5f5;
-    border-radius: 30px 0 0 0;
-    border: 1px solid #ececf49a;
   }
-  .smart-home .nav .statistical-wrapper {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
+
+  .user-wrapper a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    /* Remove underline */
+    color: inherit;
+    /* Inherit color to keep styling consistent */
+  }
+
+  .smart-home .overlap,
+  .smart-home .overlap-2,
+  .smart-home .overlap-3 {
+    width: 100%;
+    height: auto;
+    top: auto;
+    left: 0;
+  }
+}
+
+/* Flexbox layout example */
+.smart-home {
+  display: flex;
+  flex-wrap: wrap;
+  /* Allows items to wrap to next line if necessary */
+  justify-content: space-around;
+  /* Space items evenly */
+}
+
+.smart-home .group-wrapper {
+  flex: 1 1 45%;
+  /* Flexible box with base width of 45% */
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.smart-home .rectangle,
+.smart-home .rectangle-2 {
+  width: 100%;
+  padding-top: 56.25%;
+  /* 16:9 aspect ratio */
+  position: relative;
+}
+
+.smart-home .rectangle::before,
+.smart-home .rectangle-2::before {
+  content: "";
+  display: block;
+  padding-top: 56.25%;
+  /* 16:9 aspect ratio */
+}
+
+.smart-home .rectangle,
+.smart-home .rectangle-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f5f5f5;
+  border-radius: 30px 0 0 0;
+  border: 1px solid #ececf49a;
+}
+
+.smart-home .nav .statistical-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .smart-home .nav .statistical-wrapper img {
-    width: 54px;
-    height: 54px;
+  width: 54px;
+  height: 54px;
 }
+
+/* Ensure the navigation bar on the left takes up full height */
 .smart-home .nav {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px;
-  background-color: #7A40F2; /* Thay thế ảnh PNG bằng màu nền */
+  width: 120px;
+  height: 100vh;
+  /* Full height of the viewport */
+  background-color: #7A40F2;
   padding: 20px 0;
-  border-radius: 0 15px 15px 0; /* Làm bo góc cho thanh điều hướng */
+  border-radius: 0 15px 15px 0;
 }
 
 .smart-home .user-wrapper {
@@ -1167,39 +1237,56 @@
   font-size: 12px;
   text-align: center;
 }
+
 /* Căn chỉnh dòng hiển thị tên và số liệu */
 .info-row {
   display: flex;
   justify-content: space-between;
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
-  color: black; /* Đổi màu chữ thành đen */
-  margin-bottom: 5px; /* Tạo khoảng cách nhỏ phía dưới tên và số liệu */
+  color: black;
+  /* Đổi màu chữ thành đen */
+  margin-bottom: 5px;
+  /* Tạo khoảng cách nhỏ phía dưới tên và số liệu */
 }
 
 .info-label {
-  color: black; /* Đổi màu chữ thành đen */
+  color: black;
+  /* Đổi màu chữ thành đen */
 }
 
 /* Thiết lập thanh đo nhiệt độ, độ ẩm, và ánh sáng */
 .temperature-bar {
   height: 20px;
-  background-color: #FF5733; /* Màu của thanh nhiệt độ */
+  background-color: #FF5733;
+  /* Màu của thanh nhiệt độ */
   width: 0%;
   transition: width 0.5s;
 }
 
 .humidity-bar {
   height: 20px;
-  background-color: #3498DB; /* Màu của thanh độ ẩm */
+  background-color: #3498DB;
+  /* Màu của thanh độ ẩm */
   width: 0%;
   transition: width 0.5s;
 }
 
 .light-bar {
   height: 20px;
-  background-color: #F1C40F; /* Màu của thanh ánh sáng */
+  background-color: #F1C40F;
+  /* Màu của thanh ánh sáng */
   width: 0%;
   transition: width 0.5s;
+}
+
+.temperature-bar,
+.humidity-bar,
+.light-bar {
+  height: 40px;
+  border-radius: 30px;
+  /* width: 100%; */
+  margin-top: 41px;
+  transition: width 0.5s ease;
 }

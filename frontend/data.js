@@ -1,32 +1,34 @@
-let sensorData = [];
+let sensorData = [];   // Dữ liệu gốc từ API
+let filteredData = []; // Dữ liệu đã lọc
 let currentPage = 1;
-let rowsPerPage = 10; // Default value
-
-// Lấy dữ liệu cảm biến từ API
+let rowsPerPage = 10;  // Giá trị mặc định
+let totalItems = 0;    // Tổng số lượng dữ liệu
+// Lấy dữ liệu từ API
 function fetchSensorData() {
     fetch('http://localhost:3000/api/sensor-data')
-    .then(response => response.json())
-    .then(data => {
-        sensorData = data;
-        updateTable(sensorData);
-    })
-    .catch(error => {
-        console.error('Error fetching sensor data:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            sensorData = data.map(item => {
+                return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') }; // Định dạng thời gian
+            });
+            applyFilters(false);  // Áp dụng bộ lọc ngay khi nhận được dữ liệu
+        })
+        .catch(error => {
+            console.error('Error fetching sensor data:', error);
+        });
 }
-setInterval(fetchSensorData, 1000);
-// Cập nhật bảng với dữ liệu cảm biến
+
+// Cập nhật bảng với dữ liệu đã phân trang
 function updateTable(data) {
     const tableBody = document.querySelector('#data-table tbody');
-    tableBody.innerHTML = '';
+    tableBody.innerHTML = '';  // Xóa nội dung cũ
 
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-    const paginatedData = data.slice(start, end);
+    const paginatedData = data.slice(start, end);  // Hiển thị dữ liệu theo trang
 
     paginatedData.forEach(item => {
-        const time = new Date().toISOString(); // Trả về thời gian hiện tại theo UTC
-        const formattedTime = dayjs(time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
+        const formattedTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${item.id}</td>
@@ -39,28 +41,87 @@ function updateTable(data) {
     });
 
     document.getElementById('page-info').textContent = `Page ${currentPage} of ${Math.ceil(data.length / rowsPerPage)}`;
+    filterTable();
 }
 
+// Hàm thay đổi trang
+
+let intervalId; // Biến lưu trữ interval
+
+// Hàm bắt đầu cập nhật dữ liệu tự động
+function startAutoUpdate() {
+    intervalId = setInterval(fetchSensorData, 1000); // Cứ 5 giây cập nhật
+}
+
+// Hàm dừng cập nhật dữ liệu tự động
+function stopAutoUpdate() {
+    clearInterval(intervalId); // Dừng cập nhật dữ liệu
+}
+
+// Hàm lọc dữ liệu
+function applyFilters(resetPage = true) {
+    let data = [...sensorData]; // Sao chép dữ liệu gốc
+
+    // Kiểm tra bộ lọc thời gian
+    const timeFilterValue = document.getElementById('time-filter').value.trim();
+    if (timeFilterValue) {
+        stopAutoUpdate(); // Dừng cập nhật nếu người dùng nhập bộ lọc thời gian
+        data = data.filter(item => {
+            const itemTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm');
+            return itemTime.includes(timeFilterValue);
+        });
+    } else {
+        startAutoUpdate(); // Khôi phục cập nhật tự động nếu không có tìm kiếm
+    }
+
+    // Kiểm tra bộ lọc thiết bị
+    const deviceFilter = document.getElementById('device-filter').value;
+    if (deviceFilter !== 'all') {
+        data = data.filter(item => {
+            if (deviceFilter === 'Lamp') return item.temperature !== undefined;
+            if (deviceFilter === 'Air Conditioner') return item.humidity !== undefined;
+            if (deviceFilter === 'Fan') return item.light !== undefined;
+            return true;
+        });
+    }
+
+    filteredData = data;  // Cập nhật dữ liệu đã lọc
+
+    if (resetPage) {
+        currentPage = 1; // Chỉ reset trang nếu cần
+    }
+
+    updateTable(filteredData);  // Hiển thị bảng với dữ liệu đã lọc
+}
+
+// Hàm thay đổi trang (không đặt lại currentPage)
 function changePage(newPage) {
-    if (newPage < 1 || newPage > Math.ceil(sensorData.length / rowsPerPage)) return;
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    if (newPage < 1 || newPage > totalPages) return;
     currentPage = newPage;
-    updateTable(sensorData);
+    updateTable(filteredData);  // Cập nhật bảng với dữ liệu đã lọc
 }
 
+// Hàm thay đổi số hàng mỗi trang (không đặt lại currentPage)
 function changePageSize() {
     rowsPerPage = parseInt(document.getElementById('page-size').value);
-    currentPage = 1; // Reset to first page
-    updateTable(sensorData);
+    updateTable(filteredData);  // Cập nhật bảng với dữ liệu đã lọc
 }
+
+
+// Bắt đầu cập nhật dữ liệu ngay khi trang tải
+startAutoUpdate();
+fetchSensorData();
+
 
 // Event listeners for filters and pagination
 document.getElementById('page-size').addEventListener('change', changePageSize);
 document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
 
-// Gọi hàm để lấy dữ liệu cảm biến khi trang tải
-fetchSensorData();
-
+// Lọc dữ liệu khi có sự thay đổi trong bộ lọc
+document.getElementById('device-filter').addEventListener('change', applyFilters);
+document.getElementById('time-filter').addEventListener('input', applyFilters);
 
 function filterTable() {
     const deviceFilter = document.getElementById('device-filter').value;
@@ -88,31 +149,18 @@ function filterTable() {
     }
 }
 
+function hideColumn(index) {
+    const columns = document.querySelectorAll(`#data-table th:nth-child(${index + 1}), #data-table td:nth-child(${index + 1})`);
+    columns.forEach(column => column.style.display = 'none');
+}
+
 function showColumn(index) {
     const columns = document.querySelectorAll(`#data-table th:nth-child(${index + 1}), #data-table td:nth-child(${index + 1})`);
     columns.forEach(column => column.style.display = '');
 }
 
-// Thêm event listener cho bộ lọc
+// Event listener để gọi hàm filterTable khi thay đổi bộ lọc thiết bị
 document.getElementById('device-filter').addEventListener('change', filterTable);
 
 // Gọi filterTable khi trang được tải để đảm bảo trạng thái bảng ban đầu
 window.onload = filterTable;
-
-
-document.getElementById('time-filter').addEventListener('input', filterTable);
-
-
-
-// Event listeners for filters, sorting, and page size change
-document.getElementById('device-filter').addEventListener('change', filterTable);
-document.getElementById('action-filter').addEventListener('change', filterTable);
-document.getElementById('time-filter').addEventListener('input', filterTable);
-document.getElementById('page-size').addEventListener('change', changePageSize);
-document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
-document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
-
-// Initial data fetch
-fetchActions();
-
-

@@ -26,12 +26,7 @@ function updateTable(data) {
     const paginatedData = data.slice(start, end);
 
     paginatedData.forEach(action => {
-        const time = new Date().toISOString(); // Trả về thời gian hiện tại theo UTC
-        const formattedTime = dayjs(time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
-        console.log('Original time:', formattedTime);
-        
-        console.log(time); // Log thời gian để kiểm tra
-
+        const formattedTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${action.id}</td>
@@ -74,15 +69,15 @@ function filterTable() {
 
     if (timeFilter) {
         filteredData = filteredData.filter(action => {
-            const formattedTime = new Date(action.time).toLocaleTimeString() + ' ' + new Date(action.time).toLocaleDateString();
-            return formattedTime.includes(timeFilter);
+            const actionTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm'); // Định dạng thời gian hh:mm
+            return actionTime.includes(timeFilter); // So khớp cả ngày và giờ:phút
         });
     }
 
     updateTable(filteredData);
 }
 
-document.getElementById('time-filter').addEventListener('input', filterTable);
+
 
 // Event listeners for filters, sorting, and page size change
 document.getElementById('device-filter').addEventListener('change', filterTable);

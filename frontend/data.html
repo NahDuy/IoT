@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistical Data</title>
     <link rel="stylesheet" href="stylesta.css">
-    <link rel="stylesheet" href="style.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
     <!-- <link rel="stylesheet" href="globals.css" /> -->
 
 </head>
@@ -45,8 +45,15 @@
                 <option value="Air Conditioner">Humidity</option>
                 <option value="Fan">Light</option>
             </select>
-            <label for="time-filter">Tìm kiếm theo thời gian:</label>
-            <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 15:28:43 28/8/2024)">
+            <!-- <label for="time-filter">Tìm kiếm theo thời gian:</label>
+            <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 28/08/2024 12:30)"> -->
+            <div>
+                <label for="start-time">Thời gian (YYYY-MM-DD HH:mm):</label>
+                <input type="datetime-local" id="start-time">
+                
+                <button onclick="handleTimeSearch()">Tìm kiếm</button>
+            </div>
+            
 
 
         </div>

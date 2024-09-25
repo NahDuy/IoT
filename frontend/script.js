@@ -56,10 +56,10 @@ function saveState() {
 
 // Lưu trữ các hành động bật/tắt và gửi đến server
 function logAction(device, action) {
-    const time = new Date();
+    
     const id = Date.now(); // Sử dụng timestamp làm ID
 
-    const actionData = { id, device, action, time };
+    const actionData = { id, device, action};
 
     fetch('http://localhost:3000/api/actions', {
         method: 'POST',
