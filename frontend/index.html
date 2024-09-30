@@ -74,6 +74,9 @@
                         <canvas id="chart"></canvas>
 
                       </div>
+                      <div class="chart">
+                        <canvas id="secondChart"></canvas>
+                      </div>
 
 
                     </div>
@@ -156,7 +159,11 @@
         // Kết nối với MQTT Broker  
         const ip = '192.168.24.102'; // Địa chỉ IP của MQTT broker
         const mqttUrl = `ws://${ip}:8080`;
-        const client = mqtt.connect(mqttUrl); // Kết nối MQTT
+
+        const client = mqtt.connect(mqttUrl, {
+          username: 'duy',  // Thay bằng username của bạn
+          password: '1'     // Thay bằng password của bạn
+        }); // Kết nối MQTT
 
 
         client.on('connect', function () {
@@ -296,6 +303,36 @@
               }
             }
           });
+          // // Initialize the second chart
+          // const secondCtx = document.getElementById('secondChart').getContext('2d');
+          // const secondChart = new Chart(secondCtx, {
+          //   type: 'line',  // This can be 'line', 'bar', or any other chart type
+          //   data: {
+          //     labels: [], // Placeholder for labels
+          //     datasets: [
+          //       {
+          //         label: 'Data Example',
+          //         data: [],
+          //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          //         borderColor: 'rgba(75, 192, 192, 1)',
+          //         borderWidth: 1
+          //       }
+          //     ]
+          //   },
+          //   options: {
+          //     scales: {
+          //       x: {
+          //         type: 'time', // Hiển thị thời gian trên trục X
+          //         time: {
+          //           unit: 'second'
+          //         }
+          //       },
+          //       y: {
+          //         beginAtZero: true
+          //       }
+          //     }
+          //   }
+          // });
 
           // Cập nhật biểu đồ với dữ liệu mới
           function updateChart(temperature, humidity, light) {
@@ -317,16 +354,24 @@
 
             chart.update(); // Cập nhật lại biểu đồ
           }
+          // function updateSecondChart(newData) {
+          //   secondChart.data.labels.push(new Date());
+          //   secondChart.data.datasets[0].data.push(newData);
+
+          //   if (secondChart.data.labels.length > 20) {
+          //     secondChart.data.labels.shift();
+          //     secondChart.data.datasets[0].data.shift();
+          //   }
+
+          //   secondChart.update();
+          // }
           let isTempAlerted = false;
           let isHumidityAlerted = false;
           let isLightAlerted = false;
           // Kết nối với MQTT Broker
-          const client = mqtt.connect(mqttUrl);
 
-          client.on('connect', function () {
-            console.log('Đã kết nối với MQTT broker');
-            client.subscribe('esp32/sensors'); // Lắng nghe topic sensor data
-          });
+
+
 
           // Nhận dữ liệu từ MQTT
           client.on('message', function (topic, message) {
@@ -338,6 +383,8 @@
 
               // Cập nhật dữ liệu cảm biến lên biểu đồ
               updateChart(temperature, humidity, light);
+              // Update second chart with example data (modify as needed)
+              // updateSecondChart(temperature);
 
               // Cập nhật trực quan giá trị lên UI
               document.getElementById('temperature_text').innerText = `${temperature} °C`;
@@ -379,7 +426,7 @@
               }
 
               // Kiểm tra điều kiện để bật đèn khi ánh sáng quá thấp (dưới 300 lux)
-              if (light < 300 && !isLightAlerted) {
+              if (light < 500 && !isLightAlerted) {
                 alert("Cảnh báo: Ánh sáng quá thấp, đèn sẽ được bật!");
                 isLightAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
 
@@ -394,12 +441,18 @@
               }
 
               // Đặt lại cờ cảnh báo khi ánh sáng trở lại bình thường (trên 300 lux)
-              if (light >= 300) {
+              if (light >= 500) {
                 isLightAlerted = false; // Đặt lại cờ khi ánh sáng trở lại trên ngưỡng
               }
             }
           });
         });
+
+
+
+
+
+
 
 
 

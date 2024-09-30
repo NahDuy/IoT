@@ -54,7 +54,9 @@ app.post('/api/actions', (req, res) => {
 
 // API để lấy tất cả action
 app.get('/api/actions', (req, res) => {
-    const query = 'SELECT * FROM actions ORDER BY time DESC';
+    const { order = 'DESC' } = req.query;  // Mặc định là giảm dần
+    const query = `SELECT * FROM actions ORDER BY time ${order}`;
+
     db.query(query, (err, results) => {
         if (err) {
             console.error('Lỗi khi truy vấn database:', err);
@@ -64,10 +66,15 @@ app.get('/api/actions', (req, res) => {
         }
     });
 });
+
 // Kết nối với MQTT broker
 
 
-const mqttClient = mqtt.connect(mqttUrl); // Kết nối MQTT
+
+const mqttClient = mqtt.connect(mqttUrl, {
+    username: 'duy',  // Thay bằng username của bạn
+    password: '1'     // Thay bằng password của bạn
+}); // Kết nối MQTT
 mqttClient.on('connect', () => {
     console.log('Đã kết nối với MQTT broker');
     mqttClient.subscribe('esp32/sensors'); // Lắng nghe topic sensor data
@@ -93,17 +100,49 @@ mqttClient.on('message', (topic, message) => {
 
 // API để lấy dữ liệu cảm biến
 app.get('/api/sensor-data', (req, res) => {
-    const query = 'SELECT * FROM sensors ORDER BY time DESC';
-    
+    const { order = 'DESC' } = req.query;
+    const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const query = `SELECT * FROM sensors ORDER BY time ${sortOrder}`;
+
     db.query(query, (err, results) => {
         if (err) {
             console.error('Lỗi khi truy vấn database:', err);
             res.status(500).send('Lỗi server');
         } else {
+        
             res.json(results);
         }
     });
 });
+
+
+// API tìm kiếm dữ liệu cảm biến theo thời gian cụ thể
+app.get('/api/search-sensor-data', (req, res) => {
+    const { startTime = '' } = req.query;
+
+    // Nếu người dùng cung cấp startTime, tạo khoảng thời gian từ startTime đến startTime + 59 giây
+    if (!startTime) {
+        return res.status(400).send('Thời gian bắt đầu không hợp lệ');
+    }
+
+    const startDateTime = dayjs(startTime).format('YYYY-MM-DD HH:mm:ss');
+    const endDateTime = dayjs(startTime).add(59, 'second').format('YYYY-MM-DD HH:mm:ss');
+
+    const query = `SELECT * FROM sensors WHERE time BETWEEN ? AND ? ORDER BY time DESC`;
+    
+    db.query(query, [startDateTime, endDateTime], (err, results) => {
+        if (err) {
+            console.error('Lỗi khi truy vấn database:', err);
+            res.status(500).send('Lỗi server');
+        } else {
+            res.json({
+                data: results,
+                totalItems: results.length
+            });
+        }
+    });
+});
+
 // Phục vụ các file tĩnh từ thư mục frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 

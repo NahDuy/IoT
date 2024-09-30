@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistical Data</title>
+    <title>Data SenSor</title>
     <link rel="stylesheet" href="stylesta.css">
     <!-- <link rel="stylesheet" href="style.css" /> -->
     <!-- <link rel="stylesheet" href="globals.css" /> -->
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="statistical-container">
-        <h1>Datasensor</h1>
+        <h1>DATA SENSOR</h1>
 
         <!-- Filters -->
         <div class="filters">
@@ -47,13 +47,12 @@
             </select>
             <!-- <label for="time-filter">Tìm kiếm theo thời gian:</label>
             <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 28/08/2024 12:30)"> -->
-            <div>
-                <label for="start-time">Thời gian (YYYY-MM-DD HH:mm):</label>
-                <input type="datetime-local" id="start-time">
-                
-                <button onclick="handleTimeSearch()">Tìm kiếm</button>
-            </div>
+            <label for="start-time">Chọn thời gian lọc:</label>
+            <input type="datetime-local" id="start-time">
+            <button id="search-button">Tìm kiếm</button>
+            <button id="reset-button" style="display: none;">Quay lại bảng dữ liệu</button>
             
+
 
 
         </div>

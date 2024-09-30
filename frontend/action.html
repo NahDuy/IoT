@@ -34,11 +34,11 @@
 
     </div>
     <div class="statistical-container">
-        <h1>Action History</h1>
+        <h1>ACTION HISTORY</h1>
 
         <!-- Filters -->
         <div class="filters">
-            <label for="device-filter">Device:</label>
+            
             <select id="device-filter">
                 <option value="all">All</option>
                 <option value="Lamp">Lamp</option>
@@ -46,19 +46,22 @@
                 <option value="Fan">Fan</option>
             </select>
 
-            <label for="action-filter">Action:</label>
+            
             <select id="action-filter">
                 <option value="all">All</option>
                 <option value="On">On</option>
                 <option value="Off">Off</option>
             </select>
+            <!-- Tìm kiếm theo thời gian -->
+        <label for="start-time">Chọn thời gian lọc:</label>
+        <input type="datetime-local" id="start-time">
+        <button id="search-button">Tìm kiếm</button>
+        <button id="reset-button" style="display: none;">Quay lại bảng</button>
+        
+
         </div>
 
-
-        <label for="time-filter">Tìm kiếm theo thời gian:</label>
-        <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 28/08/2024 12:30)">
-
-
+        
 
         <!-- Table -->
         <table id="action-table">
@@ -80,7 +83,7 @@
             <button id="prev-page">Previous</button>
             <span id="page-info"></span>
             <button id="next-page">Next</button>
-            <label for="page-size">Page Size:</label>
+            <label for="page-size" >Page Size:</label>
             <select id="page-size">
                 <option value="5">5</option>
                 <option value="10" selected>10</option>
