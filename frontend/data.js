@@ -127,14 +127,20 @@ function updateTable(data) {
 
 let intervalId; // Biến lưu trữ interval
 
-// Hàm bắt đầu cập nhật dữ liệu tự động
 function startAutoUpdate() {
-    intervalId = setInterval(fetchSensorData, 1000); // Cứ 5 giây cập nhật
+    // Đảm bảo rằng không có interval nào đang chạy trước khi khởi tạo mới
+    if (intervalId) {
+        clearInterval(intervalId); // Dừng interval hiện tại nếu có
+    }
+    intervalId = setInterval(fetchSensorData, 2000); // Cứ 5 giây cập nhật
 }
 
 // Hàm dừng cập nhật dữ liệu tự động
 function stopAutoUpdate() {
-    clearInterval(intervalId); // Dừng cập nhật dữ liệu
+    if (intervalId) {
+        clearInterval(intervalId); // Dừng cập nhật dữ liệu
+        intervalId = null; // Đặt lại intervalId để tránh lỗi ở các lần sau
+    }
 }
 
 /// Hàm lọc dữ liệu

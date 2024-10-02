@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 // Kết nối với MQTT Broker  
-const ip = '192.168.24.102'; // Địa chỉ IP của MQTT broker
+const ip = '192.168.24.110'; // Địa chỉ IP của MQTT broker
 const mqttUrl = `ws://${ip}:8080`;
     
 const db = mysql.createConnection({

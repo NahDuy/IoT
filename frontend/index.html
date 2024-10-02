@@ -41,6 +41,7 @@
                             </div>
                           </div>
                         </div>
+
                         <div class="group-7">
                           <div class="div-2">
                             <div class="div-3">
@@ -67,14 +68,30 @@
                             </div>
                           </div>
                         </div>
+                        <div class="group-112" style="
+                        left: 61%;
+                    ">
+                          <div class="div-2">
+                            <div class="div-3">
+                              <div class="pressure">
+                                <div class="info-row">
+                                  <span class="info-label">Ap Luc: </span>
+                                  <span id="pressure_text">-- </span>
+                                </div>
+                                <div class="pressure-bar"></div> <!-- Thanh biểu thị áp suất -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </header>
 
 
-                      <div class="chart">
+                      <div class="chart1">
                         <canvas id="chart"></canvas>
 
                       </div>
-                      <div class="chart">
+                      <div class="chart2">
                         <canvas id="secondChart"></canvas>
                       </div>
 
@@ -157,7 +174,8 @@
       <script>
 
         // Kết nối với MQTT Broker  
-        const ip = '192.168.24.102'; // Địa chỉ IP của MQTT broker
+        // const ip = '172.20.10.7'; // Địa chỉ IP của MQTT broker
+        const ip = '192.168.24.110';
         const mqttUrl = `ws://${ip}:8080`;
 
         const client = mqtt.connect(mqttUrl, {
@@ -188,15 +206,17 @@
             document.getElementById('temperature_text').innerText = `${temperature} °C`;
             document.getElementById('humidity_text').innerText = `${humidity} %`;
             document.getElementById('light_text').innerText = light;
-
+            document.getElementById('pressure_text').innerText = `${humidity} `;
             // Tính toán tỷ lệ để thay đổi chiều rộng của thẻ
             const tempPercentage = Math.min(temperature / 50 * 100, 100);  // Giả định max là 50°C
             const humidityPercentage = Math.min(humidity, 100);  // Độ ẩm tối đa là 100%
-            const lightPercentage = Math.min(light / 1000 * 100, 100);  // Giả định max ánh sáng là 1000
+            const lightPercentage = Math.min(light / 5000 * 100, 100);  // Giả định max ánh sáng là 1000
+            const pressure = Math.min(humidity, 100);
 
             // Cập nhật chiều rộng của các thẻ dựa trên tỷ lệ
             document.querySelector('.temperature-bar').style.width = `${tempPercentage}%`;
             document.querySelector('.humidity-bar').style.width = `${humidityPercentage}%`;
+            document.querySelector('.pressure-bar').style.width = `${pressure}%`;
             document.querySelector('.light-bar').style.width = `${lightPercentage}%`;
 
           }
@@ -303,36 +323,36 @@
               }
             }
           });
-          // // Initialize the second chart
-          // const secondCtx = document.getElementById('secondChart').getContext('2d');
-          // const secondChart = new Chart(secondCtx, {
-          //   type: 'line',  // This can be 'line', 'bar', or any other chart type
-          //   data: {
-          //     labels: [], // Placeholder for labels
-          //     datasets: [
-          //       {
-          //         label: 'Data Example',
-          //         data: [],
-          //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          //         borderColor: 'rgba(75, 192, 192, 1)',
-          //         borderWidth: 1
-          //       }
-          //     ]
-          //   },
-          //   options: {
-          //     scales: {
-          //       x: {
-          //         type: 'time', // Hiển thị thời gian trên trục X
-          //         time: {
-          //           unit: 'second'
-          //         }
-          //       },
-          //       y: {
-          //         beginAtZero: true
-          //       }
-          //     }
-          //   }
-          // });
+          // Initialize the second chart
+          const secondCtx = document.getElementById('secondChart').getContext('2d');
+          const secondChart = new Chart(secondCtx, {
+            type: 'line',  // This can be 'line', 'bar', or any other chart type
+            data: {
+              labels: [], // Placeholder for labels
+              datasets: [
+                {
+                  label: 'Pressure',
+                  data: [],
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  type: 'time', // Hiển thị thời gian trên trục X
+                  time: {
+                    unit: 'second'
+                  }
+                },
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
 
           // Cập nhật biểu đồ với dữ liệu mới
           function updateChart(temperature, humidity, light) {
@@ -354,24 +374,122 @@
 
             chart.update(); // Cập nhật lại biểu đồ
           }
-          // function updateSecondChart(newData) {
-          //   secondChart.data.labels.push(new Date());
-          //   secondChart.data.datasets[0].data.push(newData);
+          function updateSecondChart(newData) {
+            secondChart.data.labels.push(new Date());
+            secondChart.data.datasets[0].data.push(newData);
 
-          //   if (secondChart.data.labels.length > 20) {
-          //     secondChart.data.labels.shift();
-          //     secondChart.data.datasets[0].data.shift();
-          //   }
+            if (secondChart.data.labels.length > 20) {
+              secondChart.data.labels.shift();
+              secondChart.data.datasets[0].data.shift();
+            }
 
-          //   secondChart.update();
-          // }
+            secondChart.update();
+          }
           let isTempAlerted = false;
           let isHumidityAlerted = false;
           let isLightAlerted = false;
           // Kết nối với MQTT Broker
+          let blinkInterval;
 
+          function startBlinkingLED() {
+            blinkInterval = setInterval(() => {
+              console.log("BẬT");
+              // Gửi lệnh bật LED
+              client.publish('esp32/led4Control', JSON.stringify({ led4: 'ON' }));
 
+              // Sau 500ms, gửi lệnh tắt LED để tạo hiệu ứng nhấp nháy
+              setTimeout(() => {
+                console.log("TẮT");
+                client.publish('esp32/led4Control', JSON.stringify({ led4: 'OFF' }));
+              }, 200); // Thời gian LED bật, có thể thay đổi nếu cần
+            }, 400); // Nhấp nháy mỗi giây, có thể điều chỉnh thời gian này
+          }
 
+          function stopBlinkingLED() {
+            
+            clearInterval(blinkInterval);
+            // Đảm bảo đèn LED tắt khi dừng nhấp nháy
+            client.publish('esp32/led4Control', JSON.stringify({ led4: 'OFF' }));
+          }
+          // Declare intervals for blinking
+          let tempBlinkInterval = null;
+          let humidityBlinkInterval = null;
+          let lightBlinkInterval = null;
+          let preBlinkInterval = null;
+
+          // Function to start blinking
+          function startBlinking(element, colorClass) {
+            let isBlinking = false;
+            return setInterval(() => {
+              if (isBlinking) {
+                element.classList.remove(colorClass);
+              } else {
+                element.classList.add(colorClass);
+              }
+              isBlinking = !isBlinking;
+            }, 500); // Blinks every 500ms
+          }
+
+          // Function to stop blinking
+          function stopBlinking(interval, element, colorClass) {
+            clearInterval(interval);
+            element.classList.remove(colorClass);
+          }
+          // Function to update the backgrounds and handle blinking
+          function updateBackgrounds(temperature, humidity, light) {
+            const tempContainer = document.querySelector('.group-2');
+            const humidityContainer = document.querySelector('.group-7');
+            const lightContainer = document.querySelector('.group-11');
+            const preContainer = document.querySelector('.group-112');
+            const pre = temperature;
+            // Check pre
+            if (pre > 80) {
+              if (!preBlinkInterval) {
+                preBlinkInterval = startBlinking(preContainer, 'bg-pre-exceeded');
+              }
+            } else {
+              if (preBlinkInterval) {
+                stopBlinking(preBlinkInterval, preContainer, 'bg-pre-exceeded');
+                preBlinkInterval = null;
+              }
+            }
+
+            // Check for temperature threshold
+            if (temperature > 40) {
+              if (!tempBlinkInterval) {
+                tempBlinkInterval = startBlinking(tempContainer, 'bg-temp-exceeded');
+              }
+            } else {
+              if (tempBlinkInterval) {
+                stopBlinking(tempBlinkInterval, tempContainer, 'bg-temp-exceeded');
+                tempBlinkInterval = null;
+              }
+            }
+
+            // Check for humidity threshold
+            if (humidity > 70) {
+              if (!humidityBlinkInterval) {
+                humidityBlinkInterval = startBlinking(humidityContainer, 'bg-humidity-exceeded');
+              }
+            } else {
+              if (humidityBlinkInterval) {
+                stopBlinking(humidityBlinkInterval, humidityContainer, 'bg-humidity-exceeded');
+                humidityBlinkInterval = null;
+              }
+            }
+
+            // Check for light threshold
+            if (light < 500) {
+              if (!lightBlinkInterval) {
+                lightBlinkInterval = startBlinking(lightContainer, 'bg-light-exceeded');
+              }
+            } else {
+              if (lightBlinkInterval) {
+                stopBlinking(lightBlinkInterval, lightContainer, 'bg-light-exceeded');
+                lightBlinkInterval = null;
+              }
+            }
+          }
 
           // Nhận dữ liệu từ MQTT
           client.on('message', function (topic, message) {
@@ -383,16 +501,24 @@
 
               // Cập nhật dữ liệu cảm biến lên biểu đồ
               updateChart(temperature, humidity, light);
-              // Update second chart with example data (modify as needed)
-              // updateSecondChart(temperature);
+
+              updateSecondChart(temperature);
 
               // Cập nhật trực quan giá trị lên UI
               document.getElementById('temperature_text').innerText = `${temperature} °C`;
               document.getElementById('humidity_text').innerText = `${humidity} %`;
               document.getElementById('light_text').innerText = light;
               // Kiểm tra điều kiện để bật quạt khi nhiệt độ > 40°C
+              if (temperature > 80) {
+                // alert("Cảnh báo: Nhiệt độ vượt quá 40°C, đèn LED sẽ nhấp nháy!");
+                updateBackgrounds(temperature, humidity, light);
+                startBlinkingLED(); // Bắt đầu nhấp nháy LED
+              } else if (temperature < 80) {
+                updateBackgrounds(temperature, humidity, light);
+                stopBlinkingLED(); // Dừng nhấp nháy LED khi nhiệt độ giảm
+              }
               if (temperature > 40 && !isTempAlerted) {
-                alert("Cảnh báo: Nhiệt độ vượt quá 40°C, quạt sẽ được bật!");
+                updateBackgrounds(temperature, humidity, light);
                 isTempAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
                 // Bật quạt tự động nếu chưa bật
                 const isFanActive = document.querySelector('.fan .group-20').classList.contains('active');
@@ -404,12 +530,14 @@
                 }
               }
               if (temperature <= 40) {
+                updateBackgrounds(temperature, humidity, light);
                 isTempAlerted = false; // Đặt lại cờ khi nhiệt độ giảm xuống dưới ngưỡng
               }
 
               // Kiểm tra điều kiện để bật điều hòa khi độ ẩm > 70%
               if (humidity > 70 && !isHumidityAlerted) {
-                alert("Cảnh báo: Độ ẩm vượt quá 70%, điều hòa sẽ được bật!");
+                updateBackgrounds(temperature, humidity, light);
+
                 isHumidityAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
 
                 // Bật điều hòa tự động nếu chưa bật
@@ -422,14 +550,15 @@
                 }
               }
               if (humidity <= 70) {
+                updateBackgrounds(temperature, humidity, light);
                 isHumidityAlerted = false; // Đặt lại cờ khi độ ẩm giảm xuống dưới ngưỡng
               }
 
               // Kiểm tra điều kiện để bật đèn khi ánh sáng quá thấp (dưới 300 lux)
               if (light < 500 && !isLightAlerted) {
-                alert("Cảnh báo: Ánh sáng quá thấp, đèn sẽ được bật!");
+                // alert("Cảnh báo: Ánh sáng quá thấp, đèn sẽ được bật!");
                 isLightAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
-
+                updateBackgrounds(temperature, humidity, light);
                 // Bật đèn tự động nếu chưa bật
                 const isLampActive = document.querySelector('.lamp .group-19').classList.contains('active');
                 if (!isLampActive) {
@@ -442,6 +571,7 @@
 
               // Đặt lại cờ cảnh báo khi ánh sáng trở lại bình thường (trên 300 lux)
               if (light >= 500) {
+                updateBackgrounds(temperature, humidity, light);
                 isLightAlerted = false; // Đặt lại cờ khi ánh sáng trở lại trên ngưỡng
               }
             }

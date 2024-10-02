@@ -91,7 +91,8 @@ html {
 
 .header .group-2,
 .header .group-7,
-.header .group-11 {
+.header .group-11,
+.header .group-112 {
   border: 2px solid #000;
   /* Viền xung quanh thẻ */
   padding: 20px;
@@ -162,6 +163,13 @@ html {
   top: -232px;
   left: -36px;
 }
+/* .smart-home .group-234 {
+  position: absolute;
+  width: 265px;
+  height: 172px;
+  top: -232px;
+  left: -36px;
+} */
 
 .smart-home .div-2 {
   height: 110px;
@@ -351,7 +359,13 @@ html {
   top: -232px;
   left: 39%;
 }
-
+.smart-home .group-112 {
+  position: absolute;
+  width: 265px;
+  height: 172px;
+  top: -232px;
+  left: 61%;
+}
 .smart-home .overlap-6 {
   position: relative;
   width: 206px;
@@ -430,11 +444,18 @@ html {
   left: 0;
 }
 
-.smart-home .chart {
+.smart-home .chart1 {
   position: absolute;
-  width: 673px;
+  width: 440px;
   height: 500px;
   top: 25px;
+  left: 53px;
+}
+.smart-home .chart2 {
+  position: absolute;
+  width: 440px;
+  height: 500px;
+  top: 261px;
   left: 53px;
 }
 
@@ -816,7 +837,7 @@ html {
   position: absolute;
   width: 480px;
   height: 156px;
-  top: -70%;
+  top: -41%;
   left: 50px;
 }
 
@@ -833,8 +854,8 @@ html {
 
 .smart-home .lightbulb {
   position: absolute;
-  width: 170px;
-  height: 150px;
+  width: 160px;
+  height: 120px;
   top: 32px;
   left: 97px;
 }
@@ -885,13 +906,13 @@ html {
   position: absolute;
   width: 480px;
   height: 156px;
-  top: -120%;
+  top: -81%;
   left: 50px;
 }
 
 .smart-home .overlap-11 {
   position: relative;
-  height: 180px;
+  height: 150px;
   top: -1px;
   left: -1px;
   background-color: #7a40f2;
@@ -901,7 +922,7 @@ html {
 
 .smart-home .overlap-10 {
   position: relative;
-  height: 180px;
+  height: 150px;
   top: -1px;
   left: -1px;
   background-color: hsl(190, 72%, 42%);
@@ -952,13 +973,13 @@ html {
   position: absolute;
   width: 480px;
   height: 156px;
-  top: -15%;
+  top: 0%;
   left: 50px;
 }
 
 .smart-home .overlap-12 {
   position: relative;
-  height: 180px;
+  height: 150px;
   top: -1px;
   left: -1px;
   background-color: #40d1f2;
@@ -999,8 +1020,8 @@ html {
 
 .smart-home .fan-table {
   position: absolute;
-  width: 130px;
-  height: 130px;
+  width: 110px;
+  height: 110px;
   top: 6px;
   left: 92px;
 }
@@ -1273,6 +1294,14 @@ html {
   transition: width 0.5s;
 }
 
+.pressure-bar {
+  height: 20px;
+  background-color: #2eab0c;
+  /* Màu của thanh độ ẩm */
+  width: 0%;
+  transition: width 0.5s;
+}
+
 .light-bar {
   height: 20px;
   background-color: #F1C40F;
@@ -1283,10 +1312,27 @@ html {
 
 .temperature-bar,
 .humidity-bar,
-.light-bar {
+.light-bar,
+.pressure-bar {
   height: 40px;
   border-radius: 30px;
   /* width: 100%; */
   margin-top: 41px;
   transition: width 0.5s ease;
 }
+/* Add background colors for when the thresholds are exceeded */
+.bg-temp-exceeded {
+  background-color: #FF5733 !important; /* Same as temperature bar color */
+}
+
+.bg-humidity-exceeded {
+  background-color: #3498DB !important; /* Same as humidity bar color */
+}
+
+.bg-light-exceeded {
+  background-color: #F1C40F !important; /* Same as light bar color */
+}
+.bg-pre-exceeded {
+  background-color: #2eab0c !important; /* Same as light bar color */
+}
+
