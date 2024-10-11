@@ -835,10 +835,10 @@ html {
 
 .smart-home .lamp {
   position: absolute;
-  width: 480px;
-  height: 156px;
-  top: -41%;
-  left: 50px;
+  width: 400px;
+  height: 100px;
+  top: -50%;
+  left: 117px;
 }
 
 /* 
@@ -854,10 +854,10 @@ html {
 
 .smart-home .lightbulb {
   position: absolute;
-  width: 160px;
-  height: 120px;
-  top: 32px;
-  left: 97px;
+  width: 120px;
+  height: 80px;
+  top: 10px;
+  left: 80px;
 }
 
 .smart-home .group-19 {
@@ -904,15 +904,15 @@ html {
 
 .smart-home .air {
   position: absolute;
-  width: 480px;
-  height: 156px;
-  top: -81%;
-  left: 50px;
+  width: 400px;
+  height: 100px;
+  top: -78%;
+  left: 117px;
 }
 
 .smart-home .overlap-11 {
   position: relative;
-  height: 150px;
+  height: 100px;
   top: -1px;
   left: -1px;
   background-color: #7a40f2;
@@ -922,7 +922,7 @@ html {
 
 .smart-home .overlap-10 {
   position: relative;
-  height: 150px;
+  height: 100px;
   top: -1px;
   left: -1px;
   background-color: hsl(190, 72%, 42%);
@@ -963,23 +963,23 @@ html {
 
 .smart-home .air-conditioner {
   position: absolute;
-  width: 250px;
-  height: 250px;
+  width: 150px;
+  height: 150px;
   top: -15px;
   left: 40px;
 }
 
 .smart-home .fan {
   position: absolute;
-  width: 480px;
-  height: 156px;
-  top: 0%;
-  left: 50px;
+  width: 400px;
+  height: 100px;
+  top: -22%;
+  left: 117px;
 }
 
 .smart-home .overlap-12 {
   position: relative;
-  height: 150px;
+  height: 100px;
   top: -1px;
   left: -1px;
   background-color: #40d1f2;
@@ -1020,9 +1020,9 @@ html {
 
 .smart-home .fan-table {
   position: absolute;
-  width: 110px;
-  height: 110px;
-  top: 6px;
+  width: 80px;
+  height: 80px;
+  top: -15px;
   left: 92px;
 }
 
@@ -1101,6 +1101,14 @@ html {
 .smart-home .group-19.active .oval-copy-2 {
   left: 26px;
   /* Di chuyển vòng tròn sang phải khi bật */
+}
+/* Khi nút erro-control được bật */
+.smart-home .erro-control.active .overlap-12 {
+  background-color: #4CAF50; /* Màu nền khi bật */
+}
+
+.smart-home .erro-control.active .oval-copy-2 {
+  left: 26px; /* Di chuyển vòng tròn sang phải khi bật */
 }
 
 .group-4 #weather-icon {
@@ -1335,4 +1343,25 @@ html {
 .bg-pre-exceeded {
   background-color: #2eab0c !important; /* Same as light bar color */
 }
+#manual-override-button {
+  background-color: #fff; /* Màu nền trắng cho nút để dễ nhìn */
+  color: #ff0000; /* Màu chữ đỏ để phù hợp với màu cảnh báo */
+  border: 2px solid #ff0000; /* Đường viền đỏ để làm nổi bật */
+  border-radius: 5px; /* Bo tròn các góc của nút */
+  padding: 8px 12px; /* Tạo khoảng cách cho nút để dễ bấm */
+  margin-left: 150px;
+  /* margin-top: 30px; */
+  font-weight: bold; /* Đậm chữ để dễ nhìn */
+  cursor: pointer; /* Hiển thị con trỏ dạng tay khi rê chuột lên nút */
+  transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển màu nhẹ khi hover */
+}
 
+#manual-override-button:hover {
+  background-color: #ff0000; /* Đổi màu nền thành đỏ khi rê chuột vào nút */
+  color: #fff; /* Màu chữ trắng khi hover để dễ đọc */
+}
+
+
+#manual-override-button {
+  display: none; /* Ẩn nút mặc định */
+}

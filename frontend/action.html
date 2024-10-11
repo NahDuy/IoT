@@ -7,7 +7,7 @@
     <title>Action History</title>
     <!-- <link rel="stylesheet" href="style.css" /> -->
     <link rel="stylesheet" href="stylesta.css">
-
+   
 
 </head>
 
@@ -44,6 +44,7 @@
                 <option value="Lamp">Lamp</option>
                 <option value="Air Conditioner">Air Conditioner</option>
                 <option value="Fan">Fan</option>
+                <option value="Warning">Warning</option>
             </select>
 
             
@@ -54,7 +55,8 @@
             </select>
             <!-- Tìm kiếm theo thời gian -->
         <label for="start-time">Chọn thời gian lọc:</label>
-        <input type="datetime-local" id="start-time">
+        <input type="text" id="start-time" placeholder="DD/MM/YYYY HH:mm:ss">
+
         <button id="search-button">Tìm kiếm</button>
         <button id="reset-button" style="display: none;">Quay lại bảng</button>
         
@@ -101,7 +103,7 @@
             }, 100); // Trì hoãn 100ms để đảm bảo trạng thái được lưu
         }
     </script>
-
+    
     <script src="action.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
@@ -110,6 +112,7 @@
         dayjs.extend(window.dayjs_plugin_utc);
         dayjs.extend(window.dayjs_plugin_timezone);
     </script>
+    
 
 </body>
 

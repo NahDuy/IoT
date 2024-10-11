@@ -69,13 +69,13 @@
                           </div>
                         </div>
                         <div class="group-112" style="
-                        left: 61%;
+                        left: 60%;
                     ">
                           <div class="div-2">
                             <div class="div-3">
                               <div class="pressure">
                                 <div class="info-row">
-                                  <span class="info-label">Ap Luc: </span>
+                                  <span class="info-label">Dust: </span>
                                   <span id="pressure_text">-- </span>
                                 </div>
                                 <div class="pressure-bar"></div> <!-- Thanh biểu thị áp suất -->
@@ -102,21 +102,55 @@
                 <div class="devices">
                   <div class="devices-wrapper">
                     <div class="devices-2">
+
+
+                      <div id="air-control" style="
+  
+ 
+  width: 212px;
+  height: 112px;
+  top: -124%;
+  left: 65%;
+
+
+">
+                        <div class="overlap-11" style="left: 29%;top: -338%;height: 34px;">
+                          <div class="info-row">
+                            <span class="info-label">Dust > 800: </span>
+                            <span id="dust_count">0</span>
+                          </div>
+
+
+                          <div class="group-20" style="
+                          left: 63%;
+                          top: 25%;
+                      ">
+
+                          </div>
+
+                        </div>
+                      </div>
                       <div class="lamp">
                         <div class="overlap-10">
                           <img class="lightbulb" src="img/light-off.png" />
                           <div class="group-19">
-                            <div class="overlap-group-5">
+                            <div class="overlap-group-5" style="
+                            left: -170%;
+                            top: -149%;
+                        ">
                               <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
                           <div class="lights">Lamp</div>
                         </div>
                       </div>
-                      <div class="air">
+                      <div class="air" id="air-control">
                         <div class="overlap-11">
                           <div class="group-20">
-                            <div class="overlap-group-6">
+                            <div class="overlap-group-6" style="
+                            top: -90%;
+                            left: -147%;
+                        ">
                               <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
@@ -124,10 +158,13 @@
                           <img class="air-conditioner" src="img/air-on.png" />
                         </div>
                       </div>
-                      <div class="fan">
+                      <div class="fan" id="fan-control">
                         <div class="overlap-12">
                           <div class="group-20">
-                            <div class="overlap-group-7">
+                            <div class="overlap-group-7" style="
+                            left: -145%;
+                            top: -92%;
+                        ">
                               <!-- <div class="oval-copy-2"></div> -->
                             </div>
                           </div>
@@ -137,7 +174,28 @@
                           </div>
                         </div>
                       </div>
+                      <div class="fan" id="erro-control" style="
+                      top: 7%;
+                  ">
+                        <div class="overlap-12" style="background-color:red">
+                          <button id="manual-override-button">Tắt Cảnh Báo</button>
+                          <div class="group-20">
+                            <div class="overlap-group-7" style="
+                            left: -145%;
+                            top: -92%;
+                        ">
+                              <!-- <div class="oval-copy-2"></div> -->
+                            </div>
+                          </div>
+                          <div class="overlap-13">
+
+                            <div class="temperature-2">Warning</div>
+
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -172,10 +230,175 @@
       </div>
       <script src="script.js"></script>
       <script>
+        let secondChart; // Khai báo biến để biểu đồ có thể truy cập toàn cục
+
+        // Hàm tạo biểu đồ Dust chỉ gọi một lần khi trang được tải
+        function createSecondChart() {
+          const secondCtx = document.getElementById('secondChart').getContext('2d');
+          secondChart = new Chart(secondCtx, {
+            type: 'line',  // Loại biểu đồ
+            data: {
+              labels: [], // Nhãn thời gian
+              datasets: [
+                {
+                  label: 'Dust',
+                  data: [],
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              scales: {
+                x: {
+                  type: 'time', // Hiển thị thời gian trên trục X
+                  time: {
+                    unit: 'second'
+                  }
+                },
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+
+        // Hàm cập nhật dữ liệu cho biểu đồ Dust
+        function updateSecondChart(newDustValue) {
+          // Thêm nhãn thời gian và dữ liệu Dust mới vào biểu đồ
+          secondChart.data.labels.push(new Date()); // Thêm nhãn thời gian
+          secondChart.data.datasets[0].data.push(newDustValue); // Thêm giá trị Dust mới vào dữ liệu
+
+          // Giới hạn số lượng điểm trên biểu đồ để không làm quá tải
+          if (secondChart.data.labels.length > 20) {
+            secondChart.data.labels.shift(); // Xóa nhãn cũ nhất
+            secondChart.data.datasets[0].data.shift(); // Xóa dữ liệu cũ nhất
+          }
+
+          secondChart.update(); // Cập nhật lại biểu đồ với dữ liệu mới
+        }
+
+        // Gọi hàm để tạo biểu đồ Dust khi trang đã tải xong
+        createSecondChart();
+        let isBlinking = false; // Biến cờ theo dõi trạng thái nhấp nháy của LED4
+        let isWarningActive = false; // Biến cờ theo dõi trạng thái cảnh báo
+        let manualOverride = false; // Biến cờ để ghi đè chế độ cảnh báo
+
+
+        function startBlinkingLED() {
+          if (!isBlinking) { // Kiểm tra nếu LED4 chưa nhấp nháy
+            isBlinking = true;
+            client.publish('esp32/led4Control', JSON.stringify({ led4: 'BLINK' }));
+            console.log('Gửi lệnh nhấp nháy LED4');
+          }
+        }
+
+        function stopBlinkingLED() {
+          if (isBlinking) { // Kiểm tra nếu LED4 đang nhấp nháy
+            isBlinking = false;
+            client.publish('esp32/led4Control', JSON.stringify({ led4: 'OFF' }));
+            console.log('Dừng nhấp nháy LED4');
+          }
+        }
+
+        function updateWarningStatus() {
+          if (!manualOverride && currentDustValue > 1800) { // Chỉ kích hoạt cảnh báo nếu không có ghi đè
+            startBlinkingLED(); // Bắt đầu nhấp nháy LED4
+            if (!isWarningActive) { // Chỉ thêm lớp 'active' nếu trạng thái cảnh báo thay đổi
+              document.querySelector('#erro-control .group-20').classList.add('active');
+              document.getElementById('manual-override-button').style.display = 'block'; // Hiển thị nút "Tắt Cảnh Báo"
+              isWarningActive = true; // Cập nhật trạng thái cảnh báo
+            }
+          } else {
+            stopBlinkingLED(); // Dừng nhấp nháy LED4
+            if (isWarningActive) { // Chỉ xóa lớp 'active' nếu trạng thái cảnh báo thay đổi
+              document.querySelector('#erro-control .group-20').classList.remove('active');
+              document.getElementById('manual-override-button').style.display = 'none'; // Ẩn nút "Tắt Cảnh Báo"
+              isWarningActive = false; // Cập nhật trạng thái cảnh báo
+            }
+          }
+        }
+
+
+
+        function startBlinking(element, colorClass) {
+          let isBlinking = false;
+          return setInterval(() => {
+            if (isBlinking) {
+              element.classList.remove(colorClass);
+            } else {
+              element.classList.add(colorClass);
+            }
+            isBlinking = !isBlinking;
+          }, 1500); // Blinks every 500ms
+        }
+        function stopBlinking(interval, element, colorClass) {
+          clearInterval(interval);
+          element.classList.remove(colorClass);
+        }
+        document.getElementById('manual-override-button').addEventListener('click', () => {
+          manualOverride = true; // Kích hoạt ghi đè để tắt cảnh báo
+          stopBlinkingLED(); // Dừng nhấp nháy LED4
+          const blinkInterval = null; // Biến interval của nhấp nháy LED4
+          const element = document.querySelector('#erro-control .group-20');
+          const colorClass = 'active'; // Lớp màu sắc cần loại bỏ
+
+          stopBlinking(blinkInterval, element, colorClass); // Gọi hàm stopBlinking để dừng nhấp nháy
+
+          document.querySelector('#erro-control .group-20').classList.remove('active'); // Xóa lớp 'active' khi tắt cảnh báo
+          document.getElementById('manual-override-button').style.display = 'none'; // Ẩn nút "Tắt Cảnh Báo"
+          console.log('Chế độ cảnh báo đã bị tắt thủ công');
+        });
+
+        // Hàm gọi API thời tiết từ OpenWeatherMap và cập nhật giá trị Dust
+        function fetchWeatherData() {
+          const apiKey = '3d83934e6e30d07e089871d45e9ce784';
+          const city = 'Hanoi';
+          const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+          let preBlinkInterval = null;
+          fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+              currentDustValue = data.main ? data.main.pressure : 0; // Sử dụng áp suất như giá trị tạm thời cho Dust
+              updateWarningStatus();
+              const preContainer = document.querySelector('.group-112');
+
+              // Check pre
+              if (currentDustValue > 1800) {
+                if (!preBlinkInterval) {
+                  preBlinkInterval = startBlinking(preContainer, 'bg-pre-exceeded');
+                }
+              } else {
+                if (preBlinkInterval) {
+                  stopBlinking(preBlinkInterval, preContainer, 'bg-pre-exceeded');
+                  preBlinkInterval = null;
+                }
+              }
+              // Cập nhật giá trị Dust trên giao diện
+              document.getElementById('pressure_text').innerText = `${currentDustValue} µg/m³`;
+
+              // Tính toán phần trăm và cập nhật thanh pressure-bar
+              const dusPercentage = Math.min((currentDustValue / 1000) * 100, 100); // Giả định giá trị tối đa là 1000
+              document.querySelector('.pressure-bar').style.width = `${dusPercentage}%`;
+
+              // Cập nhật biểu đồ Dust với giá trị mới
+              updateSecondChart(currentDustValue); // Cập nhật biểu đồ với giá trị Dust mới
+
+
+            })
+            .catch(error => console.error('Lỗi khi gọi API thời tiết:', error));
+        }
+
+        // Gọi hàm fetchWeatherData mỗi giây để cập nhật biểu đồ Dust theo thời gian thực
+        setInterval(fetchWeatherData, 5000); // Cập nhật dữ liệu mỗi 5 giây
+
+
 
         // Kết nối với MQTT Broker  
-        // const ip = '172.20.10.7'; // Địa chỉ IP của MQTT broker
-        const ip = '192.168.24.110';
+        const ip = '192.168.12.119'; // Địa chỉ IP của MQTT broker
+        // const ip = '192.168.12.119';
         const mqttUrl = `ws://${ip}:8080`;
 
         const client = mqtt.connect(mqttUrl, {
@@ -190,11 +413,16 @@
           // Đăng ký lắng nghe topic 'esp32/sensors' và 'esp32/leds' để nhận dữ liệu cảm biến và phản hồi từ đèn LED
           client.subscribe('esp32/sensors');
           client.subscribe('esp32/leds');
+          client.subscribe('esp32/led4Status');
         });
 
         // Lắng nghe phản hồi từ MQTT broker
         // Lắng nghe phản hồi từ MQTT broker
         client.on('message', function (topic, message) {
+          if (topic != 'esp32/sensors') {
+            console.log(`Received message on topic ${topic}:`, message.toString());
+          }
+
           if (topic === 'esp32/sensors') {
             const sensorData = JSON.parse(message.toString());
 
@@ -206,17 +434,17 @@
             document.getElementById('temperature_text').innerText = `${temperature} °C`;
             document.getElementById('humidity_text').innerText = `${humidity} %`;
             document.getElementById('light_text').innerText = light;
-            document.getElementById('pressure_text').innerText = `${humidity} `;
+
             // Tính toán tỷ lệ để thay đổi chiều rộng của thẻ
             const tempPercentage = Math.min(temperature / 50 * 100, 100);  // Giả định max là 50°C
             const humidityPercentage = Math.min(humidity, 100);  // Độ ẩm tối đa là 100%
             const lightPercentage = Math.min(light / 5000 * 100, 100);  // Giả định max ánh sáng là 1000
-            const pressure = Math.min(humidity, 100);
 
+            updateDustCount();
             // Cập nhật chiều rộng của các thẻ dựa trên tỷ lệ
             document.querySelector('.temperature-bar').style.width = `${tempPercentage}%`;
             document.querySelector('.humidity-bar').style.width = `${humidityPercentage}%`;
-            document.querySelector('.pressure-bar').style.width = `${pressure}%`;
+
             document.querySelector('.light-bar').style.width = `${lightPercentage}%`;
 
           }
@@ -249,13 +477,30 @@
             }
 
           }
+
+          if (topic === 'esp32/led4Status') {
+            const led4Status = JSON.parse(message.toString());
+
+            // Kiểm tra nếu đèn LED4 không đang trong chế độ cảnh báo trước khi cập nhật trạng thái
+            if (!isWarningActive) {
+              if (led4Status.led4 === "ON") {
+                document.querySelector('#erro-control .group-20').classList.add('active');
+              } else {
+                document.querySelector('#erro-control .group-20').classList.remove('active');
+              }
+            }
+          }
+
+
+
+
         });
 
 
         // Xử lý sự kiện khi nhấn nút điều khiển LED 1 (đèn)
         document.querySelector('.lamp .group-19').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
-          logAction('Lamp', isActive ? 'On' : 'Off');
+          logAction('Lamp', isActive ? 'Off' : 'On');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led1: ledState }));
           console.log(`Gửi lệnh điều khiển đèn 1: ${ledState}, chờ phản hồi từ ESP32...`);
@@ -264,20 +509,28 @@
         // Xử lý sự kiện khi nhấn nút điều khiển LED 2 (quạt)
         document.querySelector('.air .group-20').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
-          logAction('Fan', isActive ? 'On' : 'Off');
+          logAction('Air Conditioner', isActive ? 'Off' : 'On');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led2: ledState }));
-          console.log(`Gửi lệnh điều khiển quạt: ${ledState}, chờ phản hồi từ ESP32...`);
+          console.log(`Gửi lệnh điều khiển Air: ${ledState}, chờ phản hồi từ ESP32...`);
         });
 
         // Xử lý sự kiện khi nhấn nút điều khiển LED 3 (máy lạnh)
-        document.querySelector('.fan .group-20').addEventListener('click', function () {
+        document.querySelector('#fan-control .group-20').addEventListener('click', function () {
           const isActive = this.classList.contains('active');
-          logAction('Air Conditioner', isActive ? 'On' : 'Off');
+          logAction('Fan', isActive ? 'Off' : 'On');
           const ledState = isActive ? 'OFF' : 'ON';
           client.publish('esp32/ledControl', JSON.stringify({ led3: ledState }));
-          console.log(`Gửi lệnh điều khiển máy lạnh: ${ledState}, chờ phản hồi từ ESP32...`);
+          console.log(`Gửi lệnh điều khiển Fan: ${ledState}, chờ phản hồi từ ESP32...`);
         });
+        document.querySelector('#erro-control .group-20').addEventListener('click', function () {
+          const isActive = this.classList.contains('active');
+          logAction('Warning', isActive ? 'Off' : 'On');
+          const ledState = isActive ? 'OFF' : 'ON';
+          client.publish('esp32/led4Control', JSON.stringify({ led4: ledState }));
+          console.log(`Gửi lệnh điều khiển LED4: ${ledState}, chờ phản hồi từ ESP32...`);
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
 
           const ctx = document.getElementById('chart').getContext('2d');
@@ -323,36 +576,7 @@
               }
             }
           });
-          // Initialize the second chart
-          const secondCtx = document.getElementById('secondChart').getContext('2d');
-          const secondChart = new Chart(secondCtx, {
-            type: 'line',  // This can be 'line', 'bar', or any other chart type
-            data: {
-              labels: [], // Placeholder for labels
-              datasets: [
-                {
-                  label: 'Pressure',
-                  data: [],
-                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1
-                }
-              ]
-            },
-            options: {
-              scales: {
-                x: {
-                  type: 'time', // Hiển thị thời gian trên trục X
-                  time: {
-                    unit: 'second'
-                  }
-                },
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
+
 
           // Cập nhật biểu đồ với dữ liệu mới
           function updateChart(temperature, humidity, light) {
@@ -374,17 +598,7 @@
 
             chart.update(); // Cập nhật lại biểu đồ
           }
-          function updateSecondChart(newData) {
-            secondChart.data.labels.push(new Date());
-            secondChart.data.datasets[0].data.push(newData);
 
-            if (secondChart.data.labels.length > 20) {
-              secondChart.data.labels.shift();
-              secondChart.data.datasets[0].data.shift();
-            }
-
-            secondChart.update();
-          }
           let isTempAlerted = false;
           let isHumidityAlerted = false;
           let isLightAlerted = false;
@@ -393,20 +607,20 @@
 
           function startBlinkingLED() {
             blinkInterval = setInterval(() => {
-              console.log("BẬT");
+
               // Gửi lệnh bật LED
               client.publish('esp32/led4Control', JSON.stringify({ led4: 'ON' }));
 
               // Sau 500ms, gửi lệnh tắt LED để tạo hiệu ứng nhấp nháy
               setTimeout(() => {
-                console.log("TẮT");
+
                 client.publish('esp32/led4Control', JSON.stringify({ led4: 'OFF' }));
-              }, 200); // Thời gian LED bật, có thể thay đổi nếu cần
-            }, 400); // Nhấp nháy mỗi giây, có thể điều chỉnh thời gian này
+              }, 50); // Thời gian LED bật, có thể thay đổi nếu cần
+            }, 100); // Nhấp nháy mỗi giây, có thể điều chỉnh thời gian này
           }
 
           function stopBlinkingLED() {
-            
+
             clearInterval(blinkInterval);
             // Đảm bảo đèn LED tắt khi dừng nhấp nháy
             client.publish('esp32/led4Control', JSON.stringify({ led4: 'OFF' }));
@@ -415,7 +629,7 @@
           let tempBlinkInterval = null;
           let humidityBlinkInterval = null;
           let lightBlinkInterval = null;
-          let preBlinkInterval = null;
+
 
           // Function to start blinking
           function startBlinking(element, colorClass) {
@@ -435,24 +649,13 @@
             clearInterval(interval);
             element.classList.remove(colorClass);
           }
+          //CANH BAO
           // Function to update the backgrounds and handle blinking
           function updateBackgrounds(temperature, humidity, light) {
             const tempContainer = document.querySelector('.group-2');
             const humidityContainer = document.querySelector('.group-7');
             const lightContainer = document.querySelector('.group-11');
-            const preContainer = document.querySelector('.group-112');
-            const pre = temperature;
-            // Check pre
-            if (pre > 80) {
-              if (!preBlinkInterval) {
-                preBlinkInterval = startBlinking(preContainer, 'bg-pre-exceeded');
-              }
-            } else {
-              if (preBlinkInterval) {
-                stopBlinking(preBlinkInterval, preContainer, 'bg-pre-exceeded');
-                preBlinkInterval = null;
-              }
-            }
+
 
             // Check for temperature threshold
             if (temperature > 40) {
@@ -502,30 +705,38 @@
               // Cập nhật dữ liệu cảm biến lên biểu đồ
               updateChart(temperature, humidity, light);
 
-              updateSecondChart(temperature);
+
 
               // Cập nhật trực quan giá trị lên UI
               document.getElementById('temperature_text').innerText = `${temperature} °C`;
               document.getElementById('humidity_text').innerText = `${humidity} %`;
               document.getElementById('light_text').innerText = light;
-              // Kiểm tra điều kiện để bật quạt khi nhiệt độ > 40°C
-              if (temperature > 80) {
-                // alert("Cảnh báo: Nhiệt độ vượt quá 40°C, đèn LED sẽ nhấp nháy!");
-                updateBackgrounds(temperature, humidity, light);
-                startBlinkingLED(); // Bắt đầu nhấp nháy LED
-              } else if (temperature < 80) {
-                updateBackgrounds(temperature, humidity, light);
-                stopBlinkingLED(); // Dừng nhấp nháy LED khi nhiệt độ giảm
-              }
+              //CANH BAO > 80
+              // if (dust > 800) {
+              //   // alert("Cảnh báo: Nhiệt độ vượt quá 40°C, đèn LED sẽ nhấp nháy!");
+              //   console.log("BẬT CẢNH BÁO");
+              //   updateBackgrounds(temperature, humidity, light);
+              //   startBlinkingLED(); // Bắt đầu nhấp nháy LED
+              // } else if (dust < 800) {
+              //   updateBackgrounds(temperature, humidity, light);
+              //   stopBlinkingLED(); // Dừng nhấp nháy LED khi nhiệt độ giảm
+              // }
               if (temperature > 40 && !isTempAlerted) {
                 updateBackgrounds(temperature, humidity, light);
                 isTempAlerted = true; // Đặt cờ để ngăn cảnh báo lặp lại
                 // Bật quạt tự động nếu chưa bật
                 const isFanActive = document.querySelector('.fan .group-20').classList.contains('active');
                 if (!isFanActive) {
-                  document.querySelector('.fan .group-20').classList.add('active');
-                  fanbuibImage.src = 'img/fan-animate.gif'; // Cập nhật ảnh quạt
+
+
                   client.publish('esp32/ledControl', JSON.stringify({ led3: 'ON' })); // Bật quạt
+                  if (topic === 'esp32/leds') {
+                    if (ledStatus.led3 === "ON") {
+                      fanbuibImage.src = 'img/fan-animate.gif'; // Cập nhật ảnh quạt
+                      document.querySelector('.fan .group-20').classList.add('active');
+
+                    }
+                  }
                   logAction('Fan', 'On');
                 }
               }
@@ -543,9 +754,16 @@
                 // Bật điều hòa tự động nếu chưa bật
                 const isAirActive = document.querySelector('.air .group-20').classList.contains('active');
                 if (!isAirActive) {
-                  document.querySelector('.air .group-20').classList.add('active');
-                  airbuibImage.src = 'img/air-off.png'; // Cập nhật ảnh điều hòa
-                  client.publish('esp32/ledControl', JSON.stringify({ led2: 'ON' })); // Bật điều hòa
+
+
+                  client.publish('esp32/ledControl', JSON.stringify({ led2: 'ON' }));
+                  if (topic === 'esp32/leds') {
+                    if (ledStatus.led2 === "ON") {
+                      airbuibImage.src = 'img/air-off.png'; // Cập nhật ảnh điều hòa
+                      document.querySelector('.air .group-20').classList.add('active');
+
+                    }
+                  } // Bật điều hòa
                   logAction('Air Conditioner', 'On');
                 }
               }
@@ -562,9 +780,16 @@
                 // Bật đèn tự động nếu chưa bật
                 const isLampActive = document.querySelector('.lamp .group-19').classList.contains('active');
                 if (!isLampActive) {
-                  document.querySelector('.lamp .group-19').classList.add('active');
-                  lightbulbImage.src = 'img/light-on.png'; // Cập nhật ảnh đèn
+
+
                   client.publish('esp32/ledControl', JSON.stringify({ led1: 'ON' })); // Bật đèn
+                  if (topic === 'esp32/leds') {
+                    if (ledStatus.led1 === "ON") {
+                      document.querySelector('.lamp .group-19').classList.add('active');
+                      lightbulbImage.src = 'img/light-on.png';  // Cập nhật ảnh đèn
+                    }
+                  }
+
                   logAction('Lamp', 'On');
                 }
               }
@@ -582,9 +807,8 @@
 
 
 
-
-
-
+      </script>
+      <script>
 
 
       </script>

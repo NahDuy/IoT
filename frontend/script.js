@@ -112,7 +112,14 @@ function logAction(device, action) {
 //     }
 // });
 
-
+function updateDustCount() {
+    fetch('/api/dust-count')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('dust_count').innerText = data.dustCount;
+      })
+      .catch(error => console.error('Lỗi khi gọi API:', error));
+  }
 
 
 
@@ -148,3 +155,11 @@ document.querySelector('.user-image').src = 'path/to/new-profile-image.jpg';
 //         console.error('Error:', error);
 //     });
 // }
+
+document.getElementById('manual-override-button').addEventListener('click', () => {
+    manualOverride = true; // Kích hoạt ghi đè để tắt cảnh báo
+    stopBlinkingLED(); // Dừng nhấp nháy LED4
+    document.querySelector('#erro-control .group-20').classList.remove('active'); // Xóa lớp 'active' khi tắt cảnh báo
+    console.log('Chế độ cảnh báo đã bị tắt thủ công');
+  });
+  

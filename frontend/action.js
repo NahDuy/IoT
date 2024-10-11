@@ -73,15 +73,18 @@ function filterTable() {
     }
     let check = 0;
     // Lọc theo thời gian
-    if (startTime) {
-        
-        const formattedStartTime = dayjs(startTime).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm');
-        filteredData = filteredData.filter(action => {
-            const actionTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm');
-            return actionTime.includes(formattedStartTime);
-        });
-        check = 1;  // Nếu lọc theo thời gian thì đặt check thành 1
-    }
+    // Lọc theo thời gian
+    // Lọc theo thời gian
+    // Lọc theo thời gian
+if (startTime) {
+    filteredData = filteredData.filter(action => {
+        const actionTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
+        return actionTime === startTime; // So sánh chính xác với thời gian người dùng nhập vào
+    });
+    check = 1;  // Nếu lọc theo thời gian thì đặt check thành 1
+}
+
+
 
     currentPage = 1;  // Reset về trang đầu tiên sau khi lọc
     updateTable(filteredData);  // Hiển thị dữ liệu đã lọc
@@ -150,6 +153,15 @@ document.getElementById('page-size').addEventListener('change', changePageSize);
 document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
 // Khi trang tải, lấy dữ liệu ban đầu
-window.onload = function() {
+window.onload = function () {
     fetchActions();  // Gọi API để lấy dữ liệu ban đầu
 };
+document.getElementById('search-button').addEventListener('click', () => {
+    const startTimeInput = document.getElementById('start-time').value;
+    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
+    if (!timePattern.test(startTimeInput)) {
+        alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
+        return;
+    }
+    filterTable(); // Gọi hàm lọc nếu định dạng đúng
+});

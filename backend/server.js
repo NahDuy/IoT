@@ -4,12 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
 const mqtt = require('mqtt'); // Sử dụng thư viện MQTT
+const axios = require('axios');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 // Kết nối với MQTT Broker  
-const ip = '192.168.24.110'; // Địa chỉ IP của MQTT broker
+const ip = '192.168.12.119'; // Địa chỉ IP của MQTT broker
 const mqttUrl = `ws://${ip}:8080`;
     
 const db = mysql.createConnection({
@@ -80,29 +81,54 @@ mqttClient.on('connect', () => {
     mqttClient.subscribe('esp32/sensors'); // Lắng nghe topic sensor data
 });
 
-// Nhận dữ liệu từ MQTT và lưu vào MySQL
-mqttClient.on('message', (topic, message) => {
+mqttClient.on('message', async (topic, message) => {
     if (topic === 'esp32/sensors') {
         const sensorData = JSON.parse(message.toString());
         const { temperature, humidity, light } = sensorData;
-        const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
-        // Lưu dữ liệu vào MySQL, đổi tên bảng thành sensors
-        const query = 'INSERT INTO sensors (temperature, humidity, light, time) VALUES (?, ?, ?,?)';
-        db.query(query, [temperature, humidity, light,timeInVietnam], (err, result) => {
-            if (err) {
-                console.error('Lỗi khi chèn vào database:', err);
-            } else {
-                // console.log('Dữ liệu cảm biến đã được lưu vào MySQL');
-            }
-        });
+        const apiKey = '3d83934e6e30d07e089871d45e9ce784';
+        const city = 'Hanoi';
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+        try {
+            const response = await axios.get(apiUrl);
+            const currentDustValue = response.data.main ? response.data.main.pressure : 0; // Lấy giá trị áp suất từ API
+            const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+
+            // Chèn dữ liệu bao gồm dust vào cơ sở dữ liệu
+            const query = 'INSERT INTO sensor_data_temp (temperature, humidity, light, dust, time) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [temperature, humidity, light, currentDustValue, timeInVietnam], (err, result) => {
+                if (err) {
+                    console.error('Lỗi khi chèn vào database:', err);
+                } else {
+                    
+                }
+            });
+        } catch (error) {
+            console.error('Lỗi khi gọi API OpenWeatherMap:', error);
+        }
     }
 });
+
+app.get('/api/dust-count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS count FROM sensor_data_temp WHERE dust > 800';
+
+    db.query(query, (err, result) => {
+        if (err) {
+            console.error('Lỗi khi truy vấn database:', err);
+            res.status(500).send('Lỗi server');
+        } else {
+            res.json({ dustCount: result[0].count });
+        }
+    });
+});
+
+
 
 // API để lấy dữ liệu cảm biến
 app.get('/api/sensor-data', (req, res) => {
     const { order = 'DESC' } = req.query;
     const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-    const query = `SELECT * FROM sensors ORDER BY time ${sortOrder}`;
+    const query = `SELECT * FROM sensor_data_temp ORDER BY time ${sortOrder}`;
 
     db.query(query, (err, results) => {
         if (err) {
@@ -128,7 +154,7 @@ app.get('/api/search-sensor-data', (req, res) => {
     const startDateTime = dayjs(startTime).format('YYYY-MM-DD HH:mm:ss');
     const endDateTime = dayjs(startTime).add(59, 'second').format('YYYY-MM-DD HH:mm:ss');
 
-    const query = `SELECT * FROM sensors WHERE time BETWEEN ? AND ? ORDER BY time DESC`;
+    const query = `SELECT * FROM sensor_data_temp WHERE time BETWEEN ? AND ? ORDER BY time DESC`;
     
     db.query(query, [startDateTime, endDateTime], (err, results) => {
         if (err) {

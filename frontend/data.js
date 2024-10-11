@@ -1,7 +1,7 @@
 let sensorData = [];   // Dữ liệu gốc từ API
 let filteredData = []; // Dữ liệu đã lọc
 let currentPage = 1;
-let rowsPerPage = 10;  // Giá trị mặc định
+let rowsPerPage = 5;  // Giá trị mặc định
 let totalItems = 0;    // Tổng số lượng dữ liệu
 // Lấy dữ liệu từ API
 function fetchSensorData() {
@@ -18,34 +18,34 @@ function fetchSensorData() {
         });
 }
 // API tìm kiếm dữ liệu theo thời gian
-function fetchSearchSensorData() {
-    const startTime = document.getElementById('start-time').value;  // Lấy giá trị thời gian bắt đầu
+// function fetchSearchSensorData() {
+//     const startTime = document.getElementById('start-time').value;  // Lấy giá trị thời gian bắt đầu
 
-    if (!startTime) {
-        alert('Vui lòng nhập thời gian!');
-        return;
-    }
+//     if (!startTime) {
+//         alert('Vui lòng nhập thời gian!');
+//         return;
+//     }
 
-    stopAutoUpdate();  // Dừng cập nhật tự động khi người dùng tìm kiếm
+//     stopAutoUpdate();  // Dừng cập nhật tự động khi người dùng tìm kiếm
 
-    fetch(`http://localhost:3000/api/search-sensor-data?startTime=${startTime}`)
-        .then(response => response.json())
-        .then(result => {
-            sensorData = result.data.map(item => {
-                return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') }; // Định dạng thời gian
-            });
-            // Đặt lại trang hiện tại về trang đầu tiên sau khi tìm kiếm
-            currentPage = 1;
-            totalItems = result.totalItems; // Cập nhật tổng số hàng
-            applyFilters(false);  // Áp dụng bộ lọc và phân trang cho dữ liệu mới
-            // Hiển thị nút quay lại toàn bộ dữ liệu
-            // Hiển thị nút quay lại cập nhật tự động
-            document.getElementById('reset-button').style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Error fetching sensor data:', error);
-        });
-}
+//     fetch(`http://localhost:3000/api/search-sensor-data?startTime=${startTime}`)
+//         .then(response => response.json())
+//         .then(result => {
+//             sensorData = result.data.map(item => {
+//                 return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') }; // Định dạng thời gian
+//             });
+//             // Đặt lại trang hiện tại về trang đầu tiên sau khi tìm kiếm
+//             currentPage = 1;
+//             totalItems = result.totalItems; // Cập nhật tổng số hàng
+//             applyFilters(false);  // Áp dụng bộ lọc và phân trang cho dữ liệu mới
+//             // Hiển thị nút quay lại toàn bộ dữ liệu
+//             // Hiển thị nút quay lại cập nhật tự động
+//             document.getElementById('reset-button').style.display = 'block';
+//         })
+//         .catch(error => {
+//             console.error('Error fetching sensor data:', error);
+//         });
+// }
 // Sự kiện khi người dùng muốn quay lại cập nhật tự động
 document.getElementById('reset-button').addEventListener('click', () => {
     // Khôi phục lại API cập nhật tự động
@@ -93,8 +93,7 @@ function sortTableByTime() {
 
 
 
-// Hàm xử lý tìm kiếm khi người dùng nhấn nút
-document.getElementById('search-button').addEventListener('click', fetchSearchSensorData);
+
 
 // Cập nhật bảng với dữ liệu đã phân trang
 function updateTable(data) {
@@ -114,6 +113,7 @@ function updateTable(data) {
             <td>${item.temperature}</td>
             <td>${item.humidity}</td>
             <td>${item.light}</td>
+            <td>${item.dust}</td>
             <td>${formattedTime}</td>
         `;
         tableBody.appendChild(row);
@@ -161,7 +161,21 @@ function applyFilters(resetPage = true) {
             startAutoUpdate(); // Khôi phục cập nhật tự động nếu không có tìm kiếm
         }
     }
+    // Kiểm tra bộ lọc thời gian
+    const startTime = document.getElementById('start-time').value.trim();
+    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
 
+    if (startTime && timePattern.test(startTime)) {
+        stopAutoUpdate(); // Dừng cập nhật tự động nếu người dùng tìm kiếm theo thời gian
+        data = data.filter(item => {
+            const itemTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
+            return itemTime === startTime; // So sánh chính xác với thời gian người dùng nhập vào
+        });
+    // } else if (startTime && !timePattern.test(startTime)) {
+    //     alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
+    } else {
+        startAutoUpdate(); // Khôi phục cập nhật tự động nếu không có tìm kiếm
+    }
     // Kiểm tra bộ lọc thiết bị
     const deviceFilterElement = document.getElementById('device-filter');
     if (deviceFilterElement) {
@@ -171,6 +185,7 @@ function applyFilters(resetPage = true) {
                 if (deviceFilter === 'Lamp') return item.temperature !== undefined;
                 if (deviceFilter === 'Air Conditioner') return item.humidity !== undefined;
                 if (deviceFilter === 'Fan') return item.light !== undefined;
+                if (deviceFilter === 'Dust') return item.dust !== undefined;
                 return true;
             });
         }
@@ -245,7 +260,7 @@ function filterTable() {
 
     // Hiển thị cột ID và Time
     showColumn(0); // Hiển thị cột ID
-    showColumn(4); // Hiển thị cột Time
+    showColumn(5); // Hiển thị cột Time
 
     // Hiển thị các cột dựa trên lựa chọn của người dùng
     if (deviceFilter === 'Lamp') {
@@ -254,11 +269,14 @@ function filterTable() {
         showColumn(2); // Hiển thị cột Humidity
     } else if (deviceFilter === 'Fan') {
         showColumn(3); // Hiển thị cột Light
+    } else if(deviceFilter === 'Dust'){
+        showColumn(4); // Hiển thị cột Light
     } else if (deviceFilter === 'all') {
         // Hiển thị tất cả các cột
         showColumn(1); // Temperature
         showColumn(2); // Humidity
         showColumn(3); // Light
+        showColumn(4); // Light
     }
 }
 
@@ -277,3 +295,12 @@ document.getElementById('device-filter').addEventListener('change', filterTable)
 
 // Gọi filterTable khi trang được tải để đảm bảo trạng thái bảng ban đầu
 window.onload = filterTable;
+document.getElementById('search-button').addEventListener('click', () => {
+    const startTimeInput = document.getElementById('start-time').value;
+    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
+    // if (!timePattern.test(startTimeInput)) {
+    //     alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
+    //     return;
+    // }
+    filterTable(); // Gọi hàm lọc nếu định dạng đúng
+});

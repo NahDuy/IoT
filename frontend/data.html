@@ -44,14 +44,16 @@
                 <option value="Lamp">Temperature</option>
                 <option value="Air Conditioner">Humidity</option>
                 <option value="Fan">Light</option>
+                <option value="Dust">Dust</option>
             </select>
             <!-- <label for="time-filter">Tìm kiếm theo thời gian:</label>
             <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 28/08/2024 12:30)"> -->
             <label for="start-time">Chọn thời gian lọc:</label>
-            <input type="datetime-local" id="start-time">
+            <input type="text" id="start-time" placeholder="DD/MM/YYYY HH:mm:ss">
             <button id="search-button">Tìm kiếm</button>
+
             <button id="reset-button" style="display: none;">Quay lại bảng dữ liệu</button>
-            
+
 
 
 
@@ -65,6 +67,7 @@
                     <th>Temperature (°C)</th>
                     <th>Humidity (%)</th>
                     <th>Light (lx)</th>
+                    <th>Dust </th>
                     <th onclick="sortTableByTime()">Time</th>
                 </tr>
             </thead>
@@ -79,8 +82,8 @@
             <button id="next-page">Next</button>
             <label for="page-size">Page Size:</label>
             <select id="page-size">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
             </select>
