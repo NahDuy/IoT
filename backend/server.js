@@ -10,9 +10,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 // Kết nối với MQTT Broker  
-const ip = '192.168.12.119'; // Địa chỉ IP của MQTT broker
+const ip = '172.20.10.7'; // Địa chỉ IP của MQTT broker
 const mqttUrl = `ws://${ip}:8080`;
-    
+
 const db = mysql.createConnection({
     host: '127.0.0.1',
     port: 3306,  // Chỉ định cổng ở đây
@@ -84,33 +84,26 @@ mqttClient.on('connect', () => {
 mqttClient.on('message', async (topic, message) => {
     if (topic === 'esp32/sensors') {
         const sensorData = JSON.parse(message.toString());
-        const { temperature, humidity, light } = sensorData;
-        const apiKey = '3d83934e6e30d07e089871d45e9ce784';
-        const city = 'Hanoi';
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        const { temperature, humidity, light, dust } = sensorData;
 
-        try {
-            const response = await axios.get(apiUrl);
-            const currentDustValue = response.data.main ? response.data.main.pressure : 0; // Lấy giá trị áp suất từ API
-            const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 
-            // Chèn dữ liệu bao gồm dust vào cơ sở dữ liệu
-            const query = 'INSERT INTO sensor_data_temp (temperature, humidity, light, dust, time) VALUES (?, ?, ?, ?, ?)';
-            db.query(query, [temperature, humidity, light, currentDustValue, timeInVietnam], (err, result) => {
-                if (err) {
-                    console.error('Lỗi khi chèn vào database:', err);
-                } else {
-                    
-                }
-            });
-        } catch (error) {
-            console.error('Lỗi khi gọi API OpenWeatherMap:', error);
-        }
+        const timeInVietnam = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+
+        // Chèn dữ liệu bao gồm dust vào cơ sở dữ liệu
+        const query = 'INSERT INTO sensor_data_temp (temperature, humidity, light, dust, time) VALUES (?, ?, ?, ?, ?)';
+        db.query(query, [temperature, humidity, light, dust, timeInVietnam], (err, result) => {
+            if (err) {
+                console.error('Lỗi khi chèn vào database:', err);
+            } else {
+
+            }
+        });
+
     }
 });
 
 app.get('/api/dust-count', (req, res) => {
-    const query = 'SELECT COUNT(*) AS count FROM sensor_data_temp WHERE dust > 800';
+    const query = 'SELECT COUNT(*) AS count FROM sensor_data_temp WHERE dust > 60';
 
     db.query(query, (err, result) => {
         if (err) {
@@ -122,50 +115,68 @@ app.get('/api/dust-count', (req, res) => {
     });
 });
 
+app.get('/api/search-sensor-data', (req, res) => {
+    const { startTime = '' } = req.query;
 
+    if (!startTime) {
+        return res.status(400).json({ error: 'Thời gian bắt đầu không hợp lệ' });
+    }
 
-// API để lấy dữ liệu cảm biến
-app.get('/api/sensor-data', (req, res) => {
-    const { order = 'DESC' } = req.query;
-    const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-    const query = `SELECT * FROM sensor_data_temp ORDER BY time ${sortOrder}`;
-
-    db.query(query, (err, results) => {
+    const startDateTime = dayjs(startTime, 'YYYY-MM-DD HH:mm:ss', true).format('YYYY-MM-DD HH:mm:ss');
+    if (startDateTime === 'Invalid Date') {
+        return res.status(400).json({ error: 'Định dạng thời gian không hợp lệ' });
+    }
+    // const endDateTime = dayjs(startDateTime).add(59, 'second').format('YYYY-MM-DD HH:mm:ss');
+    const query = `SELECT * FROM sensor_data_temp WHERE time = ? ORDER BY time DESC`;
+    db.query(query, [startDateTime], (err, results) => {
         if (err) {
-            console.error('Lỗi khi truy vấn database:', err);
-            res.status(500).send('Lỗi server');
-        } else {
-        
-            res.json(results);
+            return res.status(500).json({ error: 'Lỗi server, vui lòng thử lại sau.' });
         }
+        res.json({
+            data: results,
+            totalItems: results.length
+        });
     });
 });
 
 
-// API tìm kiếm dữ liệu cảm biến theo thời gian cụ thể
-app.get('/api/search-sensor-data', (req, res) => {
-    const { startTime = '' } = req.query;
 
-    // Nếu người dùng cung cấp startTime, tạo khoảng thời gian từ startTime đến startTime + 59 giây
-    if (!startTime) {
-        return res.status(400).send('Thời gian bắt đầu không hợp lệ');
-    }
+app.get('/api/sensor-data', (req, res) => {
+    const { page = 1, pageSize = 5, order = 'DESC' } = req.query;  // Lấy page và pageSize từ query
+    const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const offset = (page - 1) * pageSize;  // Tính toán offset
 
-    const startDateTime = dayjs(startTime).format('YYYY-MM-DD HH:mm:ss');
-    const endDateTime = dayjs(startTime).add(59, 'second').format('YYYY-MM-DD HH:mm:ss');
+    // Câu truy vấn để lấy tổng số bản ghi
+    const countQuery = 'SELECT COUNT(*) AS totalItems FROM sensor_data_temp';
 
-    const query = `SELECT * FROM sensor_data_temp WHERE time BETWEEN ? AND ? ORDER BY time DESC`;
-    
-    db.query(query, [startDateTime, endDateTime], (err, results) => {
+    // Câu truy vấn để lấy dữ liệu theo trang và kích thước trang
+    const dataQuery = `SELECT * FROM sensor_data_temp ORDER BY time ${sortOrder}  LIMIT ?, ?`;
+
+    // Thực hiện truy vấn để đếm tổng số bản ghi
+    db.query(countQuery, (err, countResult) => {
         if (err) {
-            console.error('Lỗi khi truy vấn database:', err);
+            console.error('Lỗi khi truy vấn tổng số lượng bản ghi:', err);
             res.status(500).send('Lỗi server');
-        } else {
-            res.json({
-                data: results,
-                totalItems: results.length
-            });
+            return;
         }
+
+        const totalItems = countResult[0].totalItems;
+
+        // Thực hiện truy vấn để lấy dữ liệu
+        db.query(dataQuery, [offset, parseInt(pageSize)], (err, dataResults) => {
+            if (err) {
+                console.error('Lỗi khi truy vấn dữ liệu:', err);
+                res.status(500).send('Lỗi server');
+            } else {
+                // Trả về dữ liệu bao gồm tổng số trang và trang hiện tại
+                res.json({
+                    totalItems: totalItems,
+                    data: dataResults,
+                    totalPages: Math.ceil(totalItems / pageSize),
+                    currentPage: parseInt(page)
+                });
+            }
+        });
     });
 });
 

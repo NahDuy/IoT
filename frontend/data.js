@@ -3,109 +3,102 @@ let filteredData = []; // Dữ liệu đã lọc
 let currentPage = 1;
 let rowsPerPage = 5;  // Giá trị mặc định
 let totalItems = 0;    // Tổng số lượng dữ liệu
-// Lấy dữ liệu từ API
+let totalPages = 1;  // Khai báo tổng số trang
 function fetchSensorData() {
-    fetch('http://localhost:3000/api/sensor-data')
+    fetch(`http://localhost:3000/api/sensor-data?page=${currentPage}&pageSize=${rowsPerPage}`)
         .then(response => response.json())
-        .then(data => {
+        .then(result => {
+            const { totalItems, data, totalPages: totalPageCount, currentPage: currentPg } = result;
+
             sensorData = data.map(item => {
-                return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') }; // Định dạng thời gian
+                return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') };
             });
-            applyFilters(false);  // Áp dụng bộ lọc ngay khi nhận được dữ liệu
+            updateTable(sensorData);  // Cập nhật bảng dữ liệu
+            totalPages = totalPageCount;  // Cập nhật tổng số trang
+            currentPage = currentPg;      // Cập nhật trang hiện tại
+            filterTable();
+            // Cập nhật thông tin phân trang
+            document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
         })
         .catch(error => {
             console.error('Error fetching sensor data:', error);
         });
 }
-// API tìm kiếm dữ liệu theo thời gian
-// function fetchSearchSensorData() {
-//     const startTime = document.getElementById('start-time').value;  // Lấy giá trị thời gian bắt đầu
 
-//     if (!startTime) {
-//         alert('Vui lòng nhập thời gian!');
-//         return;
-//     }
+function fetchSearchSensorData(startTime) {
+    fetch(`http://localhost:3000/api/search-sensor-data?startTime=${startTime}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.totalItems === 0) {
+                alert("Không tìm thấy kết quả phù hợp!");
+                return;
+            }
 
-//     stopAutoUpdate();  // Dừng cập nhật tự động khi người dùng tìm kiếm
 
-//     fetch(`http://localhost:3000/api/search-sensor-data?startTime=${startTime}`)
-//         .then(response => response.json())
-//         .then(result => {
-//             sensorData = result.data.map(item => {
-//                 return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') }; // Định dạng thời gian
-//             });
-//             // Đặt lại trang hiện tại về trang đầu tiên sau khi tìm kiếm
-//             currentPage = 1;
-//             totalItems = result.totalItems; // Cập nhật tổng số hàng
-//             applyFilters(false);  // Áp dụng bộ lọc và phân trang cho dữ liệu mới
-//             // Hiển thị nút quay lại toàn bộ dữ liệu
-//             // Hiển thị nút quay lại cập nhật tự động
-//             document.getElementById('reset-button').style.display = 'block';
-//         })
-//         .catch(error => {
-//             console.error('Error fetching sensor data:', error);
-//         });
-// }
-// Sự kiện khi người dùng muốn quay lại cập nhật tự động
-document.getElementById('reset-button').addEventListener('click', () => {
-    // Khôi phục lại API cập nhật tự động
-    currentPage = 1;
-    startAutoUpdate();
-    fetchSensorData();  // Lấy lại dữ liệu từ API liên tục
-    // Ẩn nút quay lại cập nhật tự động sau khi đã nhấn
-    document.getElementById('reset-button').style.display = 'none';
+            sensorData = result.data.map(item => {
+                return { ...item, time: dayjs(item.time).tz('Asia/Ho_Chi_Minh') };
+            });
 
-});
-let sortDirection = 'DESC'; // Mặc định là giảm dần
-function sortTableByTime() {
-    // Đảo chiều sắp xếp
-    sortDirection = sortDirection === 'DESC' ? 'ASC' : 'DESC';
-    if (sortDirection === 'ASC') {
-        stopAutoUpdate(); // Dừng cập nhật tự động khi sắp xếp theo ASC
-    }
-    else{
-        startAutoUpdate();
-    }
-    // Nếu đã có dữ liệu lọc (filteredData), sắp xếp trên dữ liệu đó
-    if (filteredData.length > 0) {
-        
-        filteredData.sort((a, b) => {
-            const timeA = new Date(a.time);
-            const timeB = new Date(b.time);
-            return sortDirection === 'ASC' ? timeA - timeB : timeB - timeA;
+            updateTable(sensorData);  // Hiển thị kết quả tìm kiếm trong bảng
+            filterTable();  // Gọi hàm lọc bảng sau khi cập nhật dữ liệu
+
+            // Hiển thị "Total results" khi có tìm kiếm theo thời gian
+
+
+            // Luôn hiển thị là "Page 1 of 1"
+            document.getElementById('page-info').textContent = `Page 1 of 1`;
+            // Vô hiệu hóa các nút phân trang
+            document.getElementById('prev-page').disabled = true;
+            document.getElementById('next-page').disabled = true;
+
+            document.getElementById('reset-button').style.display = 'block';  // Hiển thị nút reset
+        })
+        .catch(error => {
+            console.error('Lỗi khi tìm kiếm dữ liệu:', error);
         });
-        currentPage = 1; // Đặt lại về trang 1 sau khi sắp xếp
-        updateTable(filteredData); // Cập nhật bảng với dữ liệu đã lọc và sắp xếp
-    } else {
-        // Nếu không có dữ liệu lọc, sắp xếp toàn bộ dữ liệu từ API
-        fetch(`/api/sensor-data?order=${sortDirection}`)
-            .then(response => response.json())
-            .then(data => {
-                sensorData = data;
-                filteredData = sensorData; // Cập nhật dữ liệu lọc với toàn bộ dữ liệu
-                currentPage = 1; // Đặt lại về trang 1 sau khi sắp xếp
-                updateTable(filteredData); // Cập nhật bảng với dữ liệu mới
-            })
-            .catch(error => console.error('Error fetching sorted sensors:', error));
-    }
+}
+
+let sortDirection = 'DESC'; // Default sorting direction
+
+function sortTableByTime() {
+    // Toggle sorting direction
+    sortDirection = sortDirection === 'DESC' ? 'ASC' : 'DESC';
+
+    // Sort the data (either filtered or full sensor data)
+    const dataToSort = filteredData.length > 0 ? filteredData : sensorData;
+
+    dataToSort.sort((a, b) => {
+        const timeA = new Date(a.time);
+        const timeB = new Date(b.time);
+        return sortDirection === 'ASC' ? timeA - timeB : timeB - timeA;
+    });
+
+    currentPage = 1; // Reset to page 1 after sorting
+    updateTable(dataToSort); // Update the table with sorted data
+}
+
+// Fetch sorted data from API if no filtered data exists
+if (filteredData.length === 0) {
+    fetch(`/api/sensor-data?order=${sortDirection}`)
+        .then(response => response.json())
+        .then(result => {
+            sensorData = result.data;
+            updateTable(sensorData); // Display the sorted sensor data
+        })
+        .catch(error => console.error('Error fetching sorted sensor data:', error));
 }
 
 
-
-
-
-
-// Cập nhật bảng với dữ liệu đã phân trang
 function updateTable(data) {
     const tableBody = document.querySelector('#data-table tbody');
     tableBody.innerHTML = '';  // Xóa nội dung cũ
 
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const paginatedData = data.slice(start, end);  // Hiển thị dữ liệu theo trang
+    if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6">Không có kết quả</td></tr>';
+        return;
+    }
 
-    paginatedData.forEach(item => {
-       
+    data.forEach(item => {
         const formattedTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -119,137 +112,86 @@ function updateTable(data) {
         tableBody.appendChild(row);
     });
 
-    document.getElementById('page-info').textContent = `Page ${currentPage} of ${Math.ceil(data.length / rowsPerPage)}`;
-    filterTable();
+    // document.getElementById('page-info').textContent = `Total results: ${data.length}`;
 }
 
-// Hàm thay đổi trang
 
-let intervalId; // Biến lưu trữ interval
 
-function startAutoUpdate() {
-    // Đảm bảo rằng không có interval nào đang chạy trước khi khởi tạo mới
-    if (intervalId) {
-        clearInterval(intervalId); // Dừng interval hiện tại nếu có
+function searchByTime() {
+    let timeFilterValue = document.getElementById('time-filter').value.trim();  // Get the entered time value
+
+    if (!timeFilterValue) {
+        alert('Vui lòng nhập thời gian!');
+        return;
     }
-    intervalId = setInterval(fetchSensorData, 2000); // Cứ 5 giây cập nhật
-}
 
-// Hàm dừng cập nhật dữ liệu tự động
-function stopAutoUpdate() {
-    if (intervalId) {
-        clearInterval(intervalId); // Dừng cập nhật dữ liệu
-        intervalId = null; // Đặt lại intervalId để tránh lỗi ở các lần sau
+    // Check if the format is 'DD/MM/YYYY HH:mm' (missing seconds)
+    const timeWithoutSecondsPattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/;
+    if (timeWithoutSecondsPattern.test(timeFilterValue)) {
+        timeFilterValue += ':00';  // Append ":00" for the seconds
     }
+
+    // Validate the time format 'DD/MM/YYYY HH:mm:ss'
+    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/;
+    if (!timePattern.test(timeFilterValue)) {
+        alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss!');
+        return;
+    }
+    // Convert and search using the correct format
+    const startTime = dayjs(timeFilterValue, 'DD/MM/YYYY HH:mm:ss', true).format('YYYY-MM-DD HH:mm:ss');
+
+    if (!dayjs(startTime).isValid()) {
+        alert('Định dạng thời gian không hợp lệ. Vui lòng kiểm tra lại!');
+        return;
+    }
+
+    fetchSearchSensorData(startTime);
 }
 
-/// Hàm lọc dữ liệu
+
+
+// Hàm applyFilters kết hợp cả bộ lọc thời gian và thiết bị
 function applyFilters(resetPage = true) {
-    let data = [...sensorData]; // Sao chép dữ liệu gốc
+    let data = [...sensorData]; // Clone the original data
 
-    // Kiểm tra bộ lọc thời gian
-    const timeFilterElement = document.getElementById('time-filter');
-    if (timeFilterElement) {
-        const timeFilterValue = timeFilterElement.value.trim();
-        if (timeFilterValue) {
-            stopAutoUpdate(); // Dừng cập nhật nếu người dùng nhập bộ lọc thời gian
-            data = data.filter(item => {
-                const itemTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm');
-                return itemTime.includes(timeFilterValue);
-            });
-        } else {
-            startAutoUpdate(); // Khôi phục cập nhật tự động nếu không có tìm kiếm
-        }
-    }
-    // Kiểm tra bộ lọc thời gian
-    const startTime = document.getElementById('start-time').value.trim();
-    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
-
-    if (startTime && timePattern.test(startTime)) {
-        stopAutoUpdate(); // Dừng cập nhật tự động nếu người dùng tìm kiếm theo thời gian
-        data = data.filter(item => {
-            const itemTime = dayjs(item.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
-            return itemTime === startTime; // So sánh chính xác với thời gian người dùng nhập vào
-        });
-    // } else if (startTime && !timePattern.test(startTime)) {
-    //     alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
-    } else {
-        startAutoUpdate(); // Khôi phục cập nhật tự động nếu không có tìm kiếm
-    }
-    // Kiểm tra bộ lọc thiết bị
+    // Device filtering logic
     const deviceFilterElement = document.getElementById('device-filter');
-    if (deviceFilterElement) {
+    if (deviceFilterElement && deviceFilterElement.value !== 'all') {
         const deviceFilter = deviceFilterElement.value;
-        if (deviceFilter !== 'all') {
-            data = data.filter(item => {
-                if (deviceFilter === 'Lamp') return item.temperature !== undefined;
-                if (deviceFilter === 'Air Conditioner') return item.humidity !== undefined;
-                if (deviceFilter === 'Fan') return item.light !== undefined;
-                if (deviceFilter === 'Dust') return item.dust !== undefined;
-                return true;
-            });
-        }
+        data = data.filter(item => {
+            if (deviceFilter === 'Lamp') return item.temperature !== undefined;
+            if (deviceFilter === 'Air Conditioner') return item.humidity !== undefined;
+            if (deviceFilter === 'Fan') return item.light !== undefined;
+            if (deviceFilter === 'Dust') return item.dust !== undefined;
+            return true;
+        });
+        document.getElementById('reset-button').style.display = 'block'; // Show reset button when filtering
     }
 
-    filteredData = data;  // Cập nhật dữ liệu đã lọc
+    filteredData = data;  // Update filtered data
+    
 
-    if (resetPage) {
-        currentPage = 1; // Chỉ reset trang nếu cần
-    }
-
-    updateTable(filteredData);  // Hiển thị bảng với dữ liệu đã lọc
-}
-
-// Event listeners for filters and pagination
-const pageSizeElement = document.getElementById('page-size');
-if (pageSizeElement) {
-    pageSizeElement.addEventListener('change', changePageSize);
-}
-
-const prevPageElement = document.getElementById('prev-page');
-if (prevPageElement) {
-    prevPageElement.addEventListener('click', () => changePage(currentPage - 1));
-}
-
-const nextPageElement = document.getElementById('next-page');
-if (nextPageElement) {
-    nextPageElement.addEventListener('click', () => changePage(currentPage + 1));
+    updateTable(filteredData);  // Update table with filtered data
 }
 
 const deviceFilterElement = document.getElementById('device-filter');
 if (deviceFilterElement) {
     deviceFilterElement.addEventListener('change', applyFilters);
 }
-
-
-// Hàm thay đổi trang (không đặt lại currentPage)
 function changePage(newPage) {
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     if (newPage < 1 || newPage > totalPages) return;
     currentPage = newPage;
-    updateTable(filteredData);  // Cập nhật bảng với dữ liệu đã lọc
+    fetchSensorData();  // Gọi lại API để lấy dữ liệu cho trang mới
 }
-
-// Hàm thay đổi số hàng mỗi trang (không đặt lại currentPage)
 function changePageSize() {
-    rowsPerPage = parseInt(document.getElementById('page-size').value);
-    updateTable(filteredData);  // Cập nhật bảng với dữ liệu đã lọc
+    rowsPerPage = parseInt(document.getElementById('page-size').value);  // Lấy số lượng bản ghi trên mỗi trang
+    currentPage = 1;  // Đặt lại trang hiện tại về 1 khi thay đổi số lượng bản ghi
+    fetchSensorData();  // Gọi lại API với số lượng bản ghi mới
 }
 
 
-// Bắt đầu cập nhật dữ liệu ngay khi trang tải
-startAutoUpdate();
+
 fetchSensorData();
-
-
-// // Event listeners for filters and pagination
-// document.getElementById('page-size').addEventListener('change', changePageSize);
-// document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
-// document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
-
-// Lọc dữ liệu khi có sự thay đổi trong bộ lọc
-document.getElementById('device-filter').addEventListener('change', applyFilters);
-
 
 function filterTable() {
     const deviceFilter = document.getElementById('device-filter').value;
@@ -269,20 +211,15 @@ function filterTable() {
         showColumn(2); // Hiển thị cột Humidity
     } else if (deviceFilter === 'Fan') {
         showColumn(3); // Hiển thị cột Light
-    } else if(deviceFilter === 'Dust'){
-        showColumn(4); // Hiển thị cột Light
+    } else if (deviceFilter === 'Dust') {
+        showColumn(4); // Hiển thị cột Dust
     } else if (deviceFilter === 'all') {
         // Hiển thị tất cả các cột
         showColumn(1); // Temperature
         showColumn(2); // Humidity
         showColumn(3); // Light
-        showColumn(4); // Light
+        showColumn(4); // Dust
     }
-}
-
-function hideColumn(index) {
-    const columns = document.querySelectorAll(`#data-table th:nth-child(${index + 1}), #data-table td:nth-child(${index + 1})`);
-    columns.forEach(column => column.style.display = 'none');
 }
 
 function showColumn(index) {
@@ -290,17 +227,31 @@ function showColumn(index) {
     columns.forEach(column => column.style.display = '');
 }
 
+
+function hideColumn(index) {
+    const columns = document.querySelectorAll(`#data-table th:nth-child(${index + 1}), #data-table td:nth-child(${index + 1})`);
+    columns.forEach(column => column.style.display = 'none');
+}
+
+document.getElementById('reset-button').addEventListener('click', () => {
+    currentPage = 1;
+    document.getElementById('device-filter').value = 'all';
+    document.getElementById('time-filter').value = '';
+    fetchSensorData();  // Gọi lại để lấy toàn bộ dữ liệu
+
+    // Kích hoạt lại phân trang sau khi quay lại bảng dữ liệu
+    document.getElementById('prev-page').disabled = false;
+    document.getElementById('next-page').disabled = false;
+
+    document.getElementById('reset-button').style.display = 'none';
+});
+
 // Event listener để gọi hàm filterTable khi thay đổi bộ lọc thiết bị
 document.getElementById('device-filter').addEventListener('change', filterTable);
-
+document.getElementById('page-size').addEventListener('change', changePageSize);
+document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
+document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
+document.getElementById('device-filter').addEventListener('change', applyFilters);
+document.getElementById('search-button').addEventListener('click', searchByTime);
 // Gọi filterTable khi trang được tải để đảm bảo trạng thái bảng ban đầu
 window.onload = filterTable;
-document.getElementById('search-button').addEventListener('click', () => {
-    const startTimeInput = document.getElementById('start-time').value;
-    const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
-    // if (!timePattern.test(startTimeInput)) {
-    //     alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
-    //     return;
-    // }
-    filterTable(); // Gọi hàm lọc nếu định dạng đúng
-});

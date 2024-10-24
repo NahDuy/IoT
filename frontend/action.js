@@ -60,7 +60,7 @@ function changePageSize() {
 function filterTable() {
     const deviceFilter = document.getElementById('device-filter').value;
     const actionFilter = document.getElementById('action-filter').value;
-    const startTime = document.getElementById('start-time').value;
+    let startTime = document.getElementById('start-time').value;
 
     filteredData = actions;  // Bắt đầu từ toàn bộ dữ liệu
 
@@ -76,13 +76,16 @@ function filterTable() {
     // Lọc theo thời gian
     // Lọc theo thời gian
     // Lọc theo thời gian
-if (startTime) {
-    filteredData = filteredData.filter(action => {
-        const actionTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
-        return actionTime === startTime; // So sánh chính xác với thời gian người dùng nhập vào
-    });
-    check = 1;  // Nếu lọc theo thời gian thì đặt check thành 1
-}
+    if (startTime) {
+        if (startTime.length === 16) {  // Length of 'DD/MM/YYYY HH:mm'
+            startTime += ':00';
+        }
+        filteredData = filteredData.filter(action => {
+            const actionTime = dayjs(action.time).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm:ss');
+            return actionTime === startTime; // So sánh chính xác với thời gian người dùng nhập vào
+        });
+        check = 1;  // Nếu lọc theo thời gian thì đặt check thành 1
+    }
 
 
 
@@ -159,9 +162,9 @@ window.onload = function () {
 document.getElementById('search-button').addEventListener('click', () => {
     const startTimeInput = document.getElementById('start-time').value;
     const timePattern = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/; // Kiểm tra định dạng DD/MM/YYYY HH:mm:ss
-    if (!timePattern.test(startTimeInput)) {
-        alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
-        return;
-    }
+    // if (!timePattern.test(startTimeInput)) {
+    //     alert('Vui lòng nhập thời gian theo định dạng DD/MM/YYYY HH:mm:ss');
+    //     return;
+    // }
     filterTable(); // Gọi hàm lọc nếu định dạng đúng
 });

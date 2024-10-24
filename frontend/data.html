@@ -17,7 +17,7 @@
         <div class="nav-buttons">
             <a href="index.html" onclick="saveState()" class="nav-button">
                 <img class="icon" src="img/house.svg" />
-                <span class="button-text">User</span>
+                <span class="button-text">Home</span>
             </a>
             <a href="user-info.html" onclick="saveState()" class="nav-button">
                 <img class="icon" src="img/user-1.svg" />
@@ -46,10 +46,10 @@
                 <option value="Fan">Light</option>
                 <option value="Dust">Dust</option>
             </select>
-            <!-- <label for="time-filter">Tìm kiếm theo thời gian:</label>
-            <input type="text" id="time-filter" placeholder="Nhập thời gian (ví dụ: 28/08/2024 12:30)"> -->
-            <label for="start-time">Chọn thời gian lọc:</label>
-            <input type="text" id="start-time" placeholder="DD/MM/YYYY HH:mm:ss">
+            <label for="time-filter">Tìm kiếm theo thời gian:</label>
+            <input type="text" id="time-filter" placeholder="Nhập thời gian ">
+            <!-- <label for="start-time">Chọn thời gian lọc:</label>
+            <input type="text" id="start-time" placeholder="DD/MM/YYYY HH:mm:ss"> -->
             <button id="search-button">Tìm kiếm</button>
 
             <button id="reset-button" style="display: none;">Quay lại bảng dữ liệu</button>
@@ -78,6 +78,7 @@
         <!-- Pagination -->
         <div id="pagination">
             <button id="prev-page">Previous</button>
+            
             <span id="page-info"></span>
             <button id="next-page">Next</button>
             <label for="page-size">Page Size:</label>
@@ -104,11 +105,13 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/customParseFormat.js"></script>
     <script>
         dayjs.extend(window.dayjs_plugin_utc);
         dayjs.extend(window.dayjs_plugin_timezone);
+        dayjs.extend(window.dayjs_plugin_customParseFormat);  // Sử dụng plugin định dạng tùy chỉnh
     </script>
-
+    
 </body>
 
 </html>
